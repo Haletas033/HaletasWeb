@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Build">
+      <UniqueIdentifier>{2f705a47-c29b-48ba-994e-b9a4e9d32a94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -20,22 +23,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Home.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Links.h">
+    <ClInclude Include="Tag.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="home.html">
-      <Filter>Resource Files</Filter>
+    <None Include="styles.css">
+      <Filter>Build</Filter>
+    </None>
+    <None Include="index.html">
+      <Filter>Build</Filter>
     </None>
     <None Include="links.html">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="styles.css">
-      <Filter>Resource Files</Filter>
+      <Filter>Build</Filter>
     </None>
   </ItemGroup>
 </Project>

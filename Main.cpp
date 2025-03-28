@@ -1,64 +1,121 @@
-
-#include <inja/inja.hpp>
-#include <nlohmann/json.hpp>
 #include <iostream>
+#include <sstream>
 #include <fstream>
 
-//Header files containing html files as a string
-#include"Home.h"
-#include"Links.h"
+#include"Tag.h"
 
-int main() {
-    inja::Environment env;
+Tag createNavLink(const std::string& href, const std::string& text)
+{
+    Tag a("a");
+    a.addAttr("href", href);
+    a << text;
 
-    //Data (contains links to socials atm)
-    nlohmann::json data;
-    data["github"] = "https://github.com/Haletas033";
-    data["youtube"] = "https://www.youtube.com/@Haletas3D";
+    Tag li("li");
+    li << a;
 
+    return li;
+}
 
-    //Loops through data and adds it as a html line to links
-   for (auto& [key, value] : data.items())
-   {
-       links_html += "<li><a href=\"" + value.get<std::string>() + "\">" + key + "</a></li>\n";
-   }
+int index() {
+    // Open a file for writing the HTML content
+    std::ofstream htmlFile("index.html");
 
-   //Closes the html file after adding data
-   links_html += R"(
-                        </ul>
-                    </div>
-            </body>
-        </html>
-    )";
-
-    
-
-   //Creates a home.html file and writes the home html string to it
-    std::string result_home = env.render(home_html, data);
-
-    std::ofstream file_home("home.html");
-    if (file_home.is_open()) {
-        file_home << result_home;
-        file_home.close();
-        std::cout << "HTML saved to home.html" << std::endl;
-    }
-    else {
-        std::cerr << "Error: Could not open file for writing." << std::endl;
+    if (!htmlFile.is_open()) {
+        std::cerr << "Failed to open file for writing." << std::endl;
+        return 1;
     }
 
+    // Start writing the HTML structure
+    htmlFile << "<!DOCTYPE html>\n";
+    htmlFile << "<html lang=\"en\">\n";
+    htmlFile << "<head>\n";
+    htmlFile << "    <meta charset=\"UTF-8\">\n";
+    htmlFile << "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+    htmlFile << "    <title>Haletas - Index</title>\n";
+    htmlFile << "    <link rel=\"stylesheet\" href=\"styles.css\">\n";
+    htmlFile << "</head>\n";
+    htmlFile << "<body>\n";
 
+    Tag h1("h1");
+    Tag h2("h2");
 
-    //Creates a links.html file and writes the links html string to it
-    std::string result_links = env.render(links_html, data);
+    Tag div("div");
+    div.addAttr("class", "navbar");
 
-    std::ofstream file_links("links.html");
-    if (file_links.is_open()) {
-        file_links << result_links;
-        file_links.close();
-        std::cout << "HTML saved to links.html" << std::endl;
-    }
-    else {
-        std::cerr << "Error: Could not open file for writing." << std::endl;
-    }
+    Tag ul("ul");
+
+    h1 << "Hello I'm Haletas";
+    h2 << "Award losing C++ dev from New Zealand";
+
+    // Add the content to the body
+    htmlFile << h1.str() << "\n";
+    htmlFile << h2.str() << "\n";
+
+    ul << createNavLink("index.html", "Home");
+    ul << createNavLink("links.html", "Links");
+    ul << createNavLink("contact.html", "Contact");
+
+    div << ul;
+    htmlFile << div.str() << "\n";
+
+    htmlFile << "</body>\n";
+    htmlFile << "</html>\n";
+
+    // Close the file
+    htmlFile.close();
+
     return 0;
+}
+
+int links() {
+    std::ofstream htmlFile("links.html");
+
+    if (!htmlFile.is_open()) {
+        std::cerr << "Failed to open file for writing." << std::endl;
+        return 1;
+    }
+
+    // Start writing the HTML structure
+    htmlFile << "<!DOCTYPE html>\n";
+    htmlFile << "<html lang=\"en\">\n";
+    htmlFile << "<head>\n";
+    htmlFile << "    <meta charset=\"UTF-8\">\n";
+    htmlFile << "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+    htmlFile << "    <title>Haletas - Index</title>\n";
+    htmlFile << "    <link rel=\"stylesheet\" href=\"styles.css\">\n";
+    htmlFile << "</head>\n";
+    htmlFile << "<body>\n";
+
+
+    Tag h1("h1");
+
+    Tag div("div");
+    div.addAttr("class", "links");
+
+    Tag ul("ul");
+
+    h1 << "Links";
+
+    htmlFile << h1.str() << "\n";
+
+    ul << createNavLink("https://github.com/Haletas033", "GitHub");
+    ul << createNavLink("https://www.youtube.com/@Haletas3D", "YouTube");
+
+    div << ul;
+    htmlFile << div.str() << "\n";
+
+
+    htmlFile << "</body>\n";
+    htmlFile << "</html>\n";
+
+    htmlFile.close();
+
+    return 0;
+}
+
+int main(){
+
+    index();
+    links();
+
 }

@@ -132,11 +132,10 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Home.h" />
-    <ClInclude Include="Links.h" />
+    <ClInclude Include="Tag.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="home.html" />
+    <None Include="index.html" />
     <None Include="links.html" />
     <None Include="styles.css" />
   </ItemGroup>
