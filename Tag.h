@@ -9,28 +9,28 @@ class Tag {
 public:
     Tag(const std::string& name) : name(name) {}
 
-    // Add text content
+    //Adds text content
     Tag& operator<<(const std::string& text) {
         content += text;
         return *this;
     }
 
-    // Add another tag inside this tag (nesting)
+    //Adds another tag inside this tag (nesting)
     Tag& operator<<(const Tag& other) {
         content += other.str();
         return *this;
     }
 
-    // Add an attribute like class, id, style, etc.
+    //Adds an attribute like class, id, style, etc.
     Tag& addAttr(const std::string& key, const std::string& value) {
         attributes += " " + key + "=\"" + value + "\"";
         return *this;
     }
 
-    // Convert to final HTML string
+    //Convert to final HTML string
     std::string str() const {
         return "<" + name + attributes + ">" + content + "</" + name + ">";
     }
 };
 
-#endif // !TAG_CLASS_H
+#endif //!TAG_CLASS_H1

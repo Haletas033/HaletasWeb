@@ -78,3 +78,33 @@ h2 {
     color: black;
     transform: scale(1.05);
 }
+
+.projects ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.projects ul li {
+    margin: 15px 0;
+}
+
+.projects ul li a {
+    text-decoration: none;
+    color: white;
+    background-color: #333;
+    padding: 15px 30px;
+    font-size: 20px;
+    border-radius: 5px;
+    display: block;
+    width: 200px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.projects ul li a:hover {
+    background-color: #808080;
+    color: black;
+    transform: scale(1.05);
+}
