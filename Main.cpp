@@ -130,7 +130,7 @@ int index() {
     h3a << "About me:";
     h3 << "Skills:";
 
-    p1 << "Hello my name is Alex Curran and I'm a high school stduent (currently attending Lakes High, Rotorua) and I am a enjoyer of porgramming, 3D modeling and electronics.";
+    p1 << "Hello my name is Alex Curran and I'm a high school stduent (currently attending Lakes High, Rotorua) and I am a enjoyer of programming, 3D modeling and electronics.";
 
     p << "- C++<br>";
     p << "- Python<br>";
