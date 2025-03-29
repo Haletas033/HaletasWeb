@@ -2,7 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include <nlohmann/json.hpp>
-#include <curl/curl.h>//o
+#include <curl/curl.h>/
 
 //Custom made class to create HTML tag programatically
 #include"Tag.h"
@@ -113,6 +113,12 @@ int index() {
 
     Tag h1("h1");
     Tag h2("h2");
+    Tag h3("h3");
+    Tag h3a("h3");
+    Tag hr("hr");
+    
+    Tag p("p");
+    Tag p1("p");
 
     Tag div("div");
     div.addAttr("class", "navbar");
@@ -121,10 +127,28 @@ int index() {
 
     h1 << "Hello I'm Haletas";
     h2 << "Award losing C++ dev from New Zealand";
+    h3a << "About me:";
+    h3 << "Skills:";
+
+    p1 << "Hello my name is Alex Curran and I'm a high school stduent (currently attending Lakes High, Rotorua) and I am a enjoyer of porgramming, 3D modeling and electronics.";
+
+    p << "- C++<br>";
+    p << "- Python<br>";
+    p << "- HTML<br>";
+    p << "- CSS<br>";
+    p << "- JS<br>";
+
 
     // Add the content to the body
     htmlFile << h1.str() << "\n";
     htmlFile << h2.str() << "\n";
+    htmlFile << hr.str() << "\n";
+    htmlFile << h3a.str() << "\n";
+    htmlFile << p1.str() << "\n";
+    htmlFile << hr.str() << "\n";
+    htmlFile << h3.str() << "\n";
+    htmlFile << p.str() << "\n";
+    htmlFile << hr.str() << "\n";
 
     ul << createNavLink("index.html", "Home");
     ul << createNavLink("links.html", "Links");
