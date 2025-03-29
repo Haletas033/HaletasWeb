@@ -133,6 +133,7 @@ int index() {
     p1 << "Hello my name is Alex Curran and I'm a high school stduent (currently attending Lakes High, Rotorua) and I am a enjoyer of programming, 3D modeling and electronics.";
 
     p << "- C++<br>";
+    p << "- C#<br>";
     p << "- Python<br>";
     p << "- HTML<br>";
     p << "- CSS<br>";
