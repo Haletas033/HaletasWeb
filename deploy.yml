@@ -3,43 +3,64 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - master  # Trigger on pushes to the master branch
+      - master  # Only deploy when there are changes to the master branch
+
+permissions:
+  contents: write  # Allow writing to repository contents (this is needed for pushing to gh-pages)
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest  # Specify the runner
+  build:
+    runs-on: windows-latest  # Use a Windows runner for MSBuild
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Configure Git
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1
 
-      - name: Checkout gh-pages branch
-        run: |
-          git fetch origin gh-pages:gh-pages
-          git checkout gh-pages
+    - name: Set up vcpkg
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git VCPKG  # Clone vcpkg into the VCPKG directory
+        cd VCPKG
+        .\bootstrap-vcpkg.bat  # Bootstraps vcpkg to create vcpkg.exe
 
-      - name: Clean the gh-pages branch (Optional)
-        run: |
-          rm -rf *  # This deletes everything in the gh-pages branch
+    - name: Install dependencies with vcpkg
+      run: |
+        cd VCPKG
+        .\vcpkg install nlohmann-json curl  # Install necessary libraries
 
-      - name: Copy Build folder to gh-pages
-        run: |
-          cp -r ../Build/* .  # Copy the Build folder contents to gh-pages branch
+    - name: Integrate vcpkg with MSBuild
+      run: |
+        cd VCPKG
+        .\vcpkg integrate install  # Integrate vcpkg with MSBuild
 
-      - name: Commit and push to gh-pages
-        run: |
-          git add .
-          git commit -m 'Deploy build to gh-pages'
-          git push origin gh-pages
+    - name: Build the project using MSBuild
+      run: |
+        msbuild Website.sln /p:Configuration=Release /p:Platform=x64 /p:OutDir=./Build/
 
-      - name: Push changes to master (if necessary)
-        run: |
-          git checkout master
-          git add .
-          git commit -m 'Update master branch'
-          git push origin
+    - name: List build output
+      run: |
+        dir ./Build  # List the contents of the output directory to verify
+
+    - name: Upload Artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+          name: github-pages
+          path: './Build'
+
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v5
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: run
+    runs-on: ubuntu-latest
+    name: Deploy to GitHub Pages
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
