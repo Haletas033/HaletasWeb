@@ -5,24 +5,34 @@ on:
     branches:
       - master  # Trigger on pushes to the master branch
 
-jobs:       
-      - name: Deploy to gh-pages
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Specify the runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure Git
         run: |
-          # Configure git
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
-          
-          # Checkout gh-pages branch
+
+      - name: Checkout gh-pages branch
+        run: |
           git fetch origin gh-pages:gh-pages
           git checkout gh-pages
-          
-          # Clean the gh-pages branch (Optional, if needed)
-          rm -rf *
-          
-          # Copy the Build folder content to gh-pages
-          cp -r ../Build/* .
 
-          # Commit and push the changes to gh-pages branch
+      - name: Clean the gh-pages branch (Optional)
+        run: |
+          rm -rf *  # This deletes everything in the gh-pages branch
+
+      - name: Copy Build folder to gh-pages
+        run: |
+          cp -r ../Build/* .  # Copy the Build folder contents to gh-pages branch
+
+      - name: Commit and push to gh-pages
+        run: |
           git add .
           git commit -m 'Deploy build to gh-pages'
           git push origin gh-pages
@@ -32,4 +42,4 @@ jobs:
           git checkout master
           git add .
           git commit -m 'Update master branch'
-          git push origin master
+          git push origin
