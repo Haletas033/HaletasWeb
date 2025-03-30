@@ -26,16 +26,11 @@
     <None Include="styles.css">
       <Filter>Build</Filter>
     </None>
-    <None Include=".github\workflows\deploy.yml" />
+    <None Include="deploy.yml" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tag.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="CMakeLists.txt">
-      <Filter>Source Files</Filter>
-    </Text>
   </ItemGroup>
 </Project>

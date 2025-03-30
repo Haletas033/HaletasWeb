@@ -9,7 +9,7 @@ permissions:
   contents: write  # Allow writing to repository contents (this is needed for pushing to gh-pages)
 
 jobs:
-  deploy:
+  build:
     runs-on: windows-latest  # Use a Windows runner for MSBuild
 
     steps:
@@ -43,9 +43,24 @@ jobs:
       run: |
         dir ./Build  # List the contents of the output directory to verify
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./Build  # Directory where your built files are located
-        publish_branch: gh-pages  # Target branch for GitHub Pages
+    - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: './Build'
+
+    - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: run
+    runs-on: ubuntu-latest
+    name: Deploy to GitHub Pages
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

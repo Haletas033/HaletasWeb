@@ -132,14 +132,11 @@
     <ClCompile Include="Src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".github\workflows\deploy.yml" />
+    <None Include="deploy.yml" />
     <None Include="styles.css" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tag.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
