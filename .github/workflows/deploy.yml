@@ -14,24 +14,22 @@ permissions:
 jobs:
   deploy:
     name: Deploy to GitHub Pages
-    runs-on: ubuntu-latest  # You may use windows-latest depending on your setup
+    runs-on: windows-latest  # Use a Windows runner for MSBuild
 
     steps:
       - name: Checkout project sources
         uses: actions/checkout@v4
 
-      # Create Build folder and run your build commands (cmake, make, etc.)
-      - name: Create Build folder and build the project
+      # Build the project using MSBuild (adjust the path to your .sln file)
+      - name: Build project with MSBuild
         run: |
-          mkdir -p Build  # Create Build folder
-          cd Build
-          cmake ..  # Run cmake to configure the project
-          make  # Run make to compile the project and output to the Build folder
+          msbuild .\YourProject.sln /p:Configuration=Release
 
-      - name: List files in the Build folder to verify the output
+      # List files in the Build folder to verify the output
+      - name: List files in the Build folder
         run: |
           echo "Listing files in the Build folder:"
-          ls -alh ./Build  # List the files in Build to confirm that they were generated
+          dir ./Build  # List files in Build folder to confirm
 
       - name: Set up Pages
         id: pages
@@ -41,7 +39,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
-          path: './Build'  # Path to the Build folder with your generated files
+          path: './Build'  # Path to your Build folder containing the output
 
       - name: Deploy to GitHub Pages
         id: deployment
