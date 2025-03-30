@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write  # Allow writing to repository contents (this is needed for pushing to gh-pages)
+  pages: write
+  id-token: write
 
 jobs:
   build:
