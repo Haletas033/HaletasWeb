@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <filesystem>
 #include <nlohmann/json.hpp>
 #include <curl/curl.h>/
 
@@ -93,7 +94,7 @@ Tag createNavLink(const std::string& href, const std::string& text)
 
 int index() {
     // Open a file for writing the HTML content
-    std::ofstream htmlFile("Build/index.html");
+    std::ofstream htmlFile("out/index.html");
 
     if (!htmlFile.is_open()) {
         std::cerr << "Failed to open file for writing." << std::endl;
@@ -116,7 +117,7 @@ int index() {
     Tag h3("h3");
     Tag h3a("h3");
     Tag hr("hr");
-    
+
     Tag p("p");
     Tag p1("p");
 
@@ -168,7 +169,7 @@ int index() {
 }
 
 int links() {
-    std::ofstream htmlFile("Build/links.html");
+    std::ofstream htmlFile("out/links.html");
 
     if (!htmlFile.is_open()) {
         std::cerr << "Failed to open file for writing." << std::endl;
@@ -226,7 +227,7 @@ int links() {
 }
 
 int projects() {
-    std::ofstream htmlFile("Build/projects.html");
+    std::ofstream htmlFile("out/projects.html");
 
     if (!htmlFile.is_open()) {
         std::cerr << "Failed to open file for writing." << std::endl;
@@ -264,7 +265,7 @@ int projects() {
     Tag div("div");
     div.addAttr("class", "projects");
 
-    
+
 
     div << generateRepoLinks("Haletas033");
 
@@ -280,7 +281,17 @@ int projects() {
     return 0;
 }
 
-int main(){
+namespace fs = std::filesystem;
+
+int main() {
+    std::string dirName = "./out";
+
+    if (fs::create_directory(dirName)) {
+        std::cout << "Directory created successfully.\n";
+    }
+    else {
+        std::cout << "Failed to create directory or it already exists.\n";
+    }
 
     index();
     links();
