@@ -18,17 +18,18 @@ jobs:
 
     - name: Set up vcpkg
       run: |
-        git clone https://github.com/microsoft/vcpkg.git
-        cd vcpkg
+        git clone https://github.com/microsoft/vcpkg.git VCPKG  # Clone vcpkg into the VCPKG directory
+        cd VCPKG
         .\bootstrap-vcpkg.bat  # Bootstraps vcpkg to create vcpkg.exe
 
     - name: Install dependencies with vcpkg
       run: |
-        cd vcpkg
+        cd VCPKG
         .\vcpkg install nlohmann-json curl  # Install necessary libraries
 
-    - name: Install vcpkg dependencies
+    - name: Integrate vcpkg with MSBuild
       run: |
+        cd VCPKG
         .\vcpkg integrate install  # Integrate vcpkg with MSBuild
 
     - name: Build the project using MSBuild
