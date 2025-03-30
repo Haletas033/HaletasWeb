@@ -14,16 +14,24 @@ permissions:
 jobs:
   deploy:
     name: Deploy to GitHub Pages
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # You may use windows-latest depending on your setup
 
     steps:
       - name: Checkout project sources
         uses: actions/checkout@v4
 
-      - name: List files to debug folder existence
+      # Create Build folder and run your build commands (cmake, make, etc.)
+      - name: Create Build folder and build the project
         run: |
-          echo "Listing files in the repo to check Build folder:"
-          ls -alh
+          mkdir -p Build  # Create Build folder
+          cd Build
+          cmake ..  # Run cmake to configure the project
+          make  # Run make to compile the project and output to the Build folder
+
+      - name: List files in the Build folder to verify the output
+        run: |
+          echo "Listing files in the Build folder:"
+          ls -alh ./Build  # List the files in Build to confirm that they were generated
 
       - name: Set up Pages
         id: pages
@@ -33,7 +41,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
-          path: './Build'  # Ensure this path points to the existing Build folder
+          path: './Build'  # Path to the Build folder with your generated files
 
       - name: Deploy to GitHub Pages
         id: deployment
