@@ -93,7 +93,7 @@ Tag createNavLink(const std::string& href, const std::string& text)
 
 int index() {
     // Open a file for writing the HTML content
-    std::ofstream htmlFile("index.html");
+    std::ofstream htmlFile("Build/index.html");
 
     if (!htmlFile.is_open()) {
         std::cerr << "Failed to open file for writing." << std::endl;
@@ -168,7 +168,7 @@ int index() {
 }
 
 int links() {
-    std::ofstream htmlFile("links.html");
+    std::ofstream htmlFile("Build/links.html");
 
     if (!htmlFile.is_open()) {
         std::cerr << "Failed to open file for writing." << std::endl;
@@ -226,7 +226,7 @@ int links() {
 }
 
 int projects() {
-    std::ofstream htmlFile("projects.html");
+    std::ofstream htmlFile("Build/projects.html");
 
     if (!htmlFile.is_open()) {
         std::cerr << "Failed to open file for writing." << std::endl;
