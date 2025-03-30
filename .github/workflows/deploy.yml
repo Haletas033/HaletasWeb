@@ -16,10 +16,26 @@ jobs:
     - name: Set up MSBuild
       uses: microsoft/setup-msbuild@v1
 
+    - name: Set up vcpkg
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        cd vcpkg
+        ./bootstrap-vcpkg.sh
+
+    - name: Install dependencies with vcpkg
+      run: |
+        cd vcpkg
+        ./vcpkg install nlohmann-json curl  # Install nlohmann-json and curl
+        ./vcpkg integrate install           # Ensure MSBuild integration
+
     - name: Build the project using MSBuild
       run: |
         msbuild Website.sln /p:Configuration=Release /p:Platform="x64"
-      
+
+    - name: List build output
+      run: |
+        ls ./Build  # Verify if the output directory contains the necessary files
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
