@@ -26,7 +26,6 @@
     <None Include="styles.css">
       <Filter>Build</Filter>
     </None>
-    <None Include="deploy.yml" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tag.h">

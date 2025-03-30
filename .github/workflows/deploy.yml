@@ -41,15 +41,20 @@ jobs:
       run: |
         msbuild Website.sln /p:Configuration=Release /p:Platform=x64 /p:OutDir=./Build/
 
-    - name: List build output
+    - name: Run the built binary
       run: |
-        dir ./Build  # List the contents of the output directory to verify
+        cd .\Build
+        .\Website.exe  # Run the built binary
+
+    - name: List html output
+      run: |
+        dir ./out  # List the contents of the output directory to verify
 
     - name: Upload Artifact
       uses: actions/upload-pages-artifact@v3
       with:
           name: github-pages
-          path: './Build'
+          path: './out'
 
     - name: Setup Pages
       id: pages
