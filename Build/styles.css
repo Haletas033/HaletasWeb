@@ -1,0 +1,126 @@
+
+
+body {
+    background-color: #201c1c;
+    color: #2f73cc;
+    font-family: monospace
+}
+
+h1{
+    text-align: center;
+    font-size: 60px;
+    margin-top: 60px;
+}
+
+h2 {
+    text-align: center;
+    font-size: 40px;
+}
+
+h3 {
+    text-align: left;
+    color: white;
+    font-size: 40px;
+    margin-left: 60px;
+    margin-bottom: 0; /* Remove bottom margin */
+}
+
+p {
+    color: white;
+    text-align: left;
+    font-size: 40px;
+    margin-left: 60px;
+    margin-top: 0; /* Remove top margin */
+}
+
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #201c1c;
+    padding: 10px;
+}
+
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar ul li {
+    display: inline;
+    margin-top: 20px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    padding: 5px;
+}
+
+.navbar ul li a:hover {
+    background-color: #808080;
+    border-radius: 5px;
+}
+
+.links ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.links ul li {
+    margin: 15px 0; 
+}
+
+.links ul li a {
+    text-decoration: none; 
+    color: white; 
+    background-color: #333;
+    padding: 15px 30px; 
+    font-size: 20px; 
+    border-radius: 5px;
+    display: block;
+    width: 200px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.links ul li a:hover {
+    background-color: #808080;
+    color: black;
+    transform: scale(1.05);
+}
+
+.projects ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.projects ul li {
+    margin: 15px 0;
+}
+
+.projects ul li a {
+    text-decoration: none;
+    color: white;
+    background-color: #333;
+    padding: 15px 30px;
+    font-size: 20px;
+    border-radius: 5px;
+    display: block;
+    width: 200px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.projects ul li a:hover {
+    background-color: #808080;
+    color: black;
+    transform: scale(1.05);
+}
