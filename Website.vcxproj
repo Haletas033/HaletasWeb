@@ -135,6 +135,7 @@
     <ClInclude Include="Tag.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".github\workflows\deploy.yml" />
     <None Include="index.html" />
     <None Include="links.html" />
     <None Include="styles.css" />

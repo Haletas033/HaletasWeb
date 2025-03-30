@@ -1,0 +1,35 @@
+name: Deploy C++ Project to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master  # Trigger deployment on push to the master branch
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v4
+
+      - name: Set up Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Artifact from Build Folder
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: './Build'  # Upload the contents of your existing Build folder
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

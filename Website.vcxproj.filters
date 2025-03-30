@@ -37,5 +37,6 @@
     <None Include="links.html">
       <Filter>Build</Filter>
     </None>
+    <None Include=".github\workflows\deploy.yml" />
   </ItemGroup>
 </Project>
