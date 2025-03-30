@@ -5,6 +5,9 @@ on:
     branches:
       - master  # Only deploy when there are changes to the master branch
 
+permissions:
+  contents: write  # Allow writing to repository contents (this is needed for pushing to gh-pages)
+
 jobs:
   deploy:
     runs-on: windows-latest  # Use a Windows runner for MSBuild
