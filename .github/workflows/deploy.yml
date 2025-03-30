@@ -34,11 +34,11 @@ jobs:
 
     - name: Build the project using MSBuild
       run: |
-        msbuild Website.sln /p:Configuration=Release /p:Platform="x64"
+        msbuild Website.sln /p:Configuration=Release /p:Platform=x64 /p:OutDir=./Build/
 
     - name: List build output
       run: |
-        ls ./Build  # Verify if the output directory contains the necessary files
+        dir ./Build  # List the contents of the output directory to verify
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
