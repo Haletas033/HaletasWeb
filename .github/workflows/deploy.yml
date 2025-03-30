@@ -1,46 +1,30 @@
-name: Deploy C++ Project to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - master
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+      - master  # Only deploy when there are changes to the master branch
 
 jobs:
   deploy:
-    name: Deploy to GitHub Pages
     runs-on: windows-latest  # Use a Windows runner for MSBuild
 
     steps:
-      - name: Checkout project sources
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # Build the project using MSBuild (adjust the path to your .sln file)
-      - name: Build project with MSBuild
-        run: |
-          msbuild .\YourProject.sln /p:Configuration=Release
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1
 
-      # List files in the Build folder to verify the output
-      - name: List files in the Build folder
-        run: |
-          echo "Listing files in the Build folder:"
-          dir ./Build  # List files in Build folder to confirm
-
-      - name: Set up Pages
-        id: pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Artifact from Build Folder
-        uses: actions/upload-pages-artifact@v3
-        with:
-          name: github-pages
-          path: './Build'  # Path to your Build folder containing the output
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    - name: Build the project using MSBuild
+      run: |
+        # Change to your solution directory if necessary
+        cd Website
+        msbuild Website.sln /p:Configuration=Release /p:Platform="x64"
+      
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./Build  # Directory where your built files are located
+        publish_branch: gh-pages  # Target branch for GitHub Pages
