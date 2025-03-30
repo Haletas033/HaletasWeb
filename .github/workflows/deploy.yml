@@ -18,8 +18,6 @@ jobs:
 
     - name: Build the project using MSBuild
       run: |
-        # Change to your solution directory if necessary
-        cd Website
         msbuild Website.sln /p:Configuration=Release /p:Platform="x64"
       
     - name: Deploy to GitHub Pages
