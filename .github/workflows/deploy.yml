@@ -3,8 +3,8 @@ name: Deploy C++ Project to GitHub Pages
 on:
   push:
     branches:
-      - master  # Trigger deployment on push to the master branch
-  workflow_dispatch:  # Allow manual trigger
+      - master
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -20,6 +20,11 @@ jobs:
       - name: Checkout project sources
         uses: actions/checkout@v4
 
+      - name: List files to debug folder existence
+        run: |
+          echo "Listing files in the repo to check Build folder:"
+          ls -alh
+
       - name: Set up Pages
         id: pages
         uses: actions/configure-pages@v5
@@ -28,7 +33,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
-          path: './Build'  # Upload the contents of your existing Build folder
+          path: './Build'  # Ensure this path points to the existing Build folder
 
       - name: Deploy to GitHub Pages
         id: deployment
