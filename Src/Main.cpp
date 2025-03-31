@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <filesystem>
+
 #include <nlohmann/json.hpp>
 #include <curl/curl.h>/
 
@@ -284,15 +284,6 @@ int projects() {
 namespace fs = std::filesystem;
 
 int main() {
-    std::string dirName = "./out";
-
-    if (fs::create_directory(dirName)) {
-        std::cout << "Directory created successfully.\n";
-    }
-    else {
-        std::cout << "Failed to create directory or it already exists.\n";
-    }
-
     index();
     links();
     projects();

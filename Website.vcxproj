@@ -25,13 +25,11 @@
     <RootNamespace>Website</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-
   <ItemDefinitionGroup>
-      <ClCompile>
-          <LanguageStandard>stdcpp17</LanguageStandard>
-      </ClCompile>
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
   </ItemDefinitionGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -139,7 +137,6 @@
     <ClCompile Include="Src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="deploy.yml" />
     <None Include="styles.css" />
   </ItemGroup>
   <ItemGroup>
