@@ -112,12 +112,15 @@ int index() {
     htmlFile << "</head>\n";
     htmlFile << "<body>\n";
 
+
+    //Header tags
     Tag h1("h1");
     Tag h2("h2");
     Tag h3("h3");
     Tag h3a("h3");
     Tag hr("hr");
 
+    //Paragraph tags
     Tag p("p");
     Tag p1("p");
 
