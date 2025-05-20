@@ -191,7 +191,7 @@ int links() {
     htmlFile << "    <meta charset=\"UTF-8\">\n";
     htmlFile << "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
     htmlFile << "    <title>Haletas - Index</title>\n";
-    htmlFile << "    <link rel=\"stylesheet\" href=\"styles.css\">\n";
+    htmlFile << "    <link href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\" rel=\"stylesheet\"> ";
     htmlFile << "</head>\n";
     htmlFile << "<body>\n";
 
