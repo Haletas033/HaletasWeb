@@ -87,8 +87,6 @@ Tag generateRepoLinks(const std::string& username) {
 
         article << a << p;
 
-        article << a;
-
         container << article;
     }
 
