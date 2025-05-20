@@ -21,7 +21,7 @@ jobs:
       - name: Build HaletasWeb site generator
         run: |
           mkdir -p build
-          g++ -std=c++17 -o build/site src/Main.cpp -lcurl
+          g++ -std=c++17 -o build/site Src/Main.cpp -lcurl
 
       - name: Run HaletasWeb generator
         run: |
