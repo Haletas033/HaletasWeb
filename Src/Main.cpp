@@ -106,71 +106,60 @@ int index() {
         return 1;
     }
 
-    // Start writing the HTML structure
-    htmlFile << "<!DOCTYPE html>\n";
-    htmlFile << "<html lang=\"en\">\n";
-    htmlFile << "<head>\n";
-    htmlFile << "    <meta charset=\"UTF-8\">\n";
-    htmlFile << "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
-    htmlFile << "    <title>Haletas - Index</title>\n";
-    htmlFile << "    <link rel=\"stylesheet\" href=\"styles.css\">\n";
-    htmlFile << "</head>\n";
-    htmlFile << "<body>\n";
+    htmlFile << Tag("").Head();
 
+    Tag header("header");
 
     //Header tags
     Tag h1("h1");
     Tag h2("h2");
-    Tag h3("h3");
-    Tag h3a("h3");
     Tag hr("hr");
+
+    h1 << "Hello I'm Haletas";
+    h2 << "Award losing C++ dev from New Zealand";
+
+    header << h1 << h2 << hr;
 
     //Paragraph tags
     Tag p("p");
     Tag p1("p");
 
-    Tag div("div");
-    div.addAttr("class", "navbar");
+    Tag nav("nav");
+    Tag ulNav("ul");
+    ulNav << createNavLink("index.html", "Home");
+    ulNav << createNavLink("links.html", "Links");
+    ulNav << createNavLink("projects.html", "Projects");
+    nav << ulNav;
 
-    Tag ul("ul");
+    Tag main("main");
+    Tag h3About("h3");
+    Tag pAbout("p");
+    Tag hr1("hr");
+    Tag h3Skills("h3");
+    Tag pSkills("p");
+    Tag hr2("hr");
 
-    h1 << "Hello I'm Haletas";
-    h2 << "Award losing C++ dev from New Zealand";
-    h3a << "About me:";
-    h3 << "Skills:";
+    h3About << "About me:";
+    pAbout << "Hello my name is Alex Curran, and I'm a high school student (currently attending Lakes High, Rotorua) and I am a enjoyer of programming, 3D modeling and electronics.";
 
-    p1 << "Hello my name is Alex Curran, and I'm a high school student (currently attending Lakes High, Rotorua) and I am a enjoyer of programming, 3D modeling and electronics.";
+    h3Skills << "Skills:";
+    pSkills << "- C++<br>"
+            << "- C#<br>"
+            << "- Python<br>"
+            << "- HTML<br>"
+            << "- CSS<br>"
+            << "- JS<br>";
 
-    p << "- C++<br>";
-    p << "- C#<br>";
-    p << "- Python<br>";
-    p << "- HTML<br>";
-    p << "- CSS<br>";
-    p << "- JS<br>";
+    main << h3About << pAbout << hr1 << h3Skills << pSkills << hr2;
 
 
-    // Add the content to the body
-    htmlFile << h1.str() << "\n";
-    htmlFile << h2.str() << "\n";
-    htmlFile << hr.str() << "\n";
-    htmlFile << h3a.str() << "\n";
-    htmlFile << p1.str() << "\n";
-    htmlFile << hr.str() << "\n";
-    htmlFile << h3.str() << "\n";
-    htmlFile << p.str() << "\n";
-    htmlFile << hr.str() << "\n";
-
-    ul << createNavLink("index.html", "Home");
-    ul << createNavLink("links.html", "Links");
-    ul << createNavLink("projects.html", "Projects");
-
-    div << ul;
-    htmlFile << div.str() << "\n";
+    htmlFile << header.str() << "\n";
+    htmlFile << nav.str() << "\n";
+    htmlFile << main.str() << "\n";
 
     htmlFile << "</body>\n";
     htmlFile << "</html>\n";
 
-    // Close the file
     htmlFile.close();
 
     return 0;
@@ -184,51 +173,31 @@ int links() {
         return 1;
     }
 
-    // Start writing the HTML structure
-    htmlFile << "<!DOCTYPE html>\n";
-    htmlFile << "<html lang=\"en\">\n";
-    htmlFile << "<head>\n";
-    htmlFile << "    <meta charset=\"UTF-8\">\n";
-    htmlFile << "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
-    htmlFile << "    <title>Haletas - Index</title>\n";
-    htmlFile << "    <link href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\" rel=\"stylesheet\"> ";
-    htmlFile << "</head>\n";
-    htmlFile << "<body>\n";
+    htmlFile << Tag("").Head();
 
-
-    Tag div1("div");
-    div1.addAttr("class", "navbar");
-
-    Tag ul1("ul");
-
+    Tag header("header");
     Tag h1("h1");
-
-    Tag div("div");
-    div.addAttr("class", "links");
-
-    Tag ul("ul");
-
     h1 << "Links";
+    header << h1;
 
-    htmlFile << h1.str() << "\n";
+    Tag nav("nav");
+    Tag ulNav("ul");
+    ulNav << createNavLink("index.html", "Home");
+    ulNav << createNavLink("links.html", "Links");
+    ulNav << createNavLink("projects.html", "Projects");
+    nav << ulNav;
 
-    ul1 << createNavLink("index.html", "Home");
-    ul1 << createNavLink("links.html", "Links");
-    ul1 << createNavLink("projects.html", "Projects");
+    Tag main("main");
+    Tag ulLinks("ul");
+    ulLinks << createNavLink("https://github.com/Haletas033", "GitHub");
+    ulLinks << createNavLink("https://www.youtube.com/@Haletas3D", "YouTube");
+    main << ulLinks;
 
-    ul << createNavLink("https://github.com/Haletas033", "GitHub");
-    ul << createNavLink("https://www.youtube.com/@Haletas3D", "YouTube");
+    htmlFile << header.str() << "\n";
+    htmlFile << nav.str() << "\n";
+    htmlFile << main.str() << "\n";
 
-    div1 << ul1;
-    div << ul;
-
-    htmlFile << div1.str() << "\n";
-    htmlFile << div.str() << "\n";
-
-
-    htmlFile << "</body>\n";
-    htmlFile << "</html>\n";
-
+    htmlFile << "</body>\n</html>\n";
     htmlFile.close();
 
     return 0;
@@ -242,54 +211,36 @@ int projects() {
         return 1;
     }
 
-    // Start writing the HTML structure
-    htmlFile << "<!DOCTYPE html>\n";
-    htmlFile << "<html lang=\"en\">\n";
-    htmlFile << "<head>\n";
-    htmlFile << "    <meta charset=\"UTF-8\">\n";
-    htmlFile << "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
-    htmlFile << "    <title>Haletas - Index</title>\n";
-    htmlFile << "    <link rel=\"stylesheet\" href=\"styles.css\">\n";
-    htmlFile << "</head>\n";
-    htmlFile << "<body>\n";
+    htmlFile << Tag("").Head();
 
-    Tag div1("div");
-    div1.addAttr("class", "navbar");
-
-    Tag ul("ul");
-
+    Tag header("header");
     Tag h1("h1");
-
     h1 << "Projects";
+    header << h1;
 
-    ul << createNavLink("index.html", "Home");
-    ul << createNavLink("links.html", "Links");
-    ul << createNavLink("projects.html", "Projects");
+    Tag nav("nav");
+    Tag ulNav("ul");
+    ulNav << createNavLink("index.html", "Home");
+    ulNav << createNavLink("links.html", "Links");
+    ulNav << createNavLink("projects.html", "Projects");
+    nav << ulNav;
 
-    div1 << ul;
+    Tag main("main");
+    Tag divProjects("div");
+    divProjects.addAttr("class", "projects");
+    divProjects << generateRepoLinks("Haletas033");
+    main << divProjects;
 
-    htmlFile << h1.str() << "\n";
+    htmlFile << header.str() << "\n";
+    htmlFile << nav.str() << "\n";
+    htmlFile << main.str() << "\n";
 
-    Tag div("div");
-    div.addAttr("class", "projects");
-
-
-
-    div << generateRepoLinks("Haletas033");
-
-    htmlFile << div1.str() << "\n";
-    htmlFile << div.str() << "\n";
-
-
-    htmlFile << "</body>\n";
-    htmlFile << "</html>\n";
-
+    htmlFile << "</body>\n</html>\n";
     htmlFile.close();
 
     return 0;
 }
 
-namespace fs = std::filesystem;
 
 int main() {
     index();
