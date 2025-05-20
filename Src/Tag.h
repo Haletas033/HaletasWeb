@@ -33,4 +33,4 @@ public:
     }
 };
 
-#endif //!TAG_CLASS_H1
+#endif //TAG_CLASS_H

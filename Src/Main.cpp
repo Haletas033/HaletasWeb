@@ -1,11 +1,12 @@
-#include <iostream>
-#include <sstream>
-#include <fstream>
+#include<iostream>
+#include<sstream>
+#include<fstream>
+#include<filesystem>
 
-#include <nlohmann/json.hpp>
-#include <curl/curl.h>/
+#include<nlohmann/json.hpp>
+#include<curl/curl.h>
 
-//Custom made class to create HTML tag programatically
+//Custom-made class to create HTML tag programmatically
 #include"Tag.h"
 
 //Callback fucntion for curl to handle HTTPS requests
@@ -93,8 +94,12 @@ Tag createNavLink(const std::string& href, const std::string& text)
 }
 
 int index() {
-    // Open a file for writing the HTML content
+
+
+    std::filesystem::create_directories("out");
+
     std::ofstream htmlFile("out/index.html");
+
 
     if (!htmlFile.is_open()) {
         std::cerr << "Failed to open file for writing." << std::endl;
@@ -134,7 +139,7 @@ int index() {
     h3a << "About me:";
     h3 << "Skills:";
 
-    p1 << "Hello my name is Alex Curran and I'm a high school stduent (currently attending Lakes High, Rotorua) and I am a enjoyer of programming, 3D modeling and electronics.";
+    p1 << "Hello my name is Alex Curran, and I'm a high school student (currently attending Lakes High, Rotorua) and I am a enjoyer of programming, 3D modeling and electronics.";
 
     p << "- C++<br>";
     p << "- C#<br>";
