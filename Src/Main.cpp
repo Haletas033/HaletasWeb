@@ -67,6 +67,13 @@ Tag generateRepoLinks(const std::string& username) {
     for (const auto& repo : repos) {
         std::string repoName = repo["name"];
         std::string repoUrl = repo["html_url"];
+        std::string repoDescription;
+
+        if (repo.contains("description") && !repo["description"].is_null()) {
+            repoDescription = repo["description"];
+        } else {
+            repoDescription = "No description provided.";
+        }
 
         Tag article("article");
         article.addAttr("class", "project");
@@ -74,6 +81,11 @@ Tag generateRepoLinks(const std::string& username) {
         Tag a("a");
         a.addAttr("href", repoUrl);
         a << repoName;
+
+        Tag p("p");
+        p << repoDescription;
+
+        article << a << p;
 
         article << a;
 
