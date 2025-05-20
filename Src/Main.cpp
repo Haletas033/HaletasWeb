@@ -51,33 +51,36 @@ std::string getRepos(const std::string& username) {
 
 //Function to parse the GitHub JSON response and generate HTML links
 Tag generateRepoLinks(const std::string& username) {
-    std::string response = getRepos(username); //Fetch JSON data from GitHub API
+    std::string response = getRepos(username);
 
-    Tag ul("ul"); //Create an unordered list tag
+    Tag container("div");
 
-    //Error checking
     if (response.empty()) {
-        ul << Tag("li") << "Failed to load repositories.";
-        return ul; //Return empty list if no data
+        Tag errorMsg("p");
+        errorMsg << "Failed to load repositories.";
+        container << errorMsg;
+        return container;
     }
 
-    auto repos = nlohmann::json::parse(response); //Parse JSON response
+    auto repos = nlohmann::json::parse(response);
 
     for (const auto& repo : repos) {
         std::string repoName = repo["name"];
         std::string repoUrl = repo["html_url"];
 
-        Tag li("li");
+        Tag article("article");
+        article.addAttr("class", "project");
+
         Tag a("a");
         a.addAttr("href", repoUrl);
         a << repoName;
 
-        li << a;
+        article << a;
 
-        ul << li; //Append each repo to the unordered list
+        container << article;
     }
 
-    return ul; //Return the list of repositories
+    return container;
 }
 
 //Function to make a navbar
@@ -226,7 +229,7 @@ int projects() {
 
     Tag main("main");
     Tag divProjects("div");
-    divProjects.addAttr("class", "card");
+    divProjects.addAttr("class", "container");
     divProjects << generateRepoLinks("Haletas033");
     main << divProjects;
 
