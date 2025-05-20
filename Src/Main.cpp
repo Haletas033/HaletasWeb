@@ -152,9 +152,8 @@ int index() {
 
     main << h3About << pAbout << hr1 << h3Skills << pSkills << hr2;
 
-
-    htmlFile << header.str() << "\n";
     htmlFile << nav.str() << "\n";
+    htmlFile << header.str() << "\n";
     htmlFile << main.str() << "\n";
 
     htmlFile << "</body>\n";
@@ -193,8 +192,8 @@ int links() {
     ulLinks << createNavLink("https://www.youtube.com/@Haletas3D", "YouTube");
     main << ulLinks;
 
-    htmlFile << header.str() << "\n";
     htmlFile << nav.str() << "\n";
+    htmlFile << header.str() << "\n";
     htmlFile << main.str() << "\n";
 
     htmlFile << "</body>\n</html>\n";
@@ -227,12 +226,12 @@ int projects() {
 
     Tag main("main");
     Tag divProjects("div");
-    divProjects.addAttr("class", "projects");
+    divProjects.addAttr("class", "card");
     divProjects << generateRepoLinks("Haletas033");
     main << divProjects;
 
-    htmlFile << header.str() << "\n";
     htmlFile << nav.str() << "\n";
+    htmlFile << header.str() << "\n";
     htmlFile << main.str() << "\n";
 
     htmlFile << "</body>\n</html>\n";
