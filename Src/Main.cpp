@@ -123,6 +123,9 @@ int index() {
 
     Tag header("header");
 
+    Tag main("main");
+    main.addAttr("class", "container");
+
     //Header tags
     Tag h1("h1");
     Tag h2("h2");
@@ -131,7 +134,7 @@ int index() {
     h1 << "Hello I'm Haletas";
     h2 << "Award losing C++ dev from New Zealand";
 
-    header << h1 << h2 << hr;
+    main << header << h1 << h2 << hr;
 
     //Paragraph tags
     Tag p("p");
@@ -144,13 +147,16 @@ int index() {
     ulNav << createNavLink("projects.html", "Projects");
     nav << ulNav;
 
-    Tag main("main");
+
+
     Tag h3About("h3");
     Tag pAbout("p");
-    Tag hr1("hr");
+
     Tag h3Skills("h3");
     Tag pSkills("p");
-    Tag hr2("hr");
+
+    Tag AboutMe("article");
+    Tag Skills("article");
 
     h3About << "About me:";
     pAbout << "Hello my name is Alex Curran, and I'm a high school student (currently attending Lakes High, Rotorua) and I am a enjoyer of programming, 3D modeling and electronics.";
@@ -163,7 +169,10 @@ int index() {
             << "- CSS<br>"
             << "- JS<br>";
 
-    main << h3About << pAbout << hr1 << h3Skills << pSkills << hr2;
+    AboutMe << h3About << pAbout;
+    Skills << h3Skills << pSkills;
+
+    main << AboutMe<< Skills;
 
     htmlFile << nav.str() << "\n";
     htmlFile << header.str() << "\n";
@@ -188,9 +197,6 @@ int links() {
     htmlFile << Tag("").Head();
 
     Tag header("header");
-    Tag h1("h1");
-    h1 << "Links";
-    header << h1;
 
     Tag nav("nav");
     Tag ulNav("ul");
@@ -200,10 +206,19 @@ int links() {
     nav << ulNav;
 
     Tag main("main");
+
+    main.addAttr("class", "container");
+
+    Tag h1("h1");
+    h1 << "Links";
+    main << header << h1;
+
+    Tag links("article");
+
     Tag ulLinks("ul");
-    ulLinks << createNavLink("https://github.com/Haletas033", "GitHub");
-    ulLinks << createNavLink("https://www.youtube.com/@Haletas3D", "YouTube");
-    main << ulLinks;
+    links << ulLinks << createNavLink("https://github.com/Haletas033", "GitHub");
+    links << ulLinks << createNavLink("https://www.youtube.com/@Haletas3D", "YouTube");
+    main << links;
 
     htmlFile << nav.str() << "\n";
     htmlFile << header.str() << "\n";
@@ -226,9 +241,13 @@ int projects() {
     htmlFile << Tag("").Head();
 
     Tag header("header");
+
+    Tag main("main");
+    main.addAttr("class", "container");
+
     Tag h1("h1");
     h1 << "Projects";
-    header << h1;
+    main << header << h1;
 
     Tag nav("nav");
     Tag ulNav("ul");
@@ -237,11 +256,7 @@ int projects() {
     ulNav << createNavLink("projects.html", "Projects");
     nav << ulNav;
 
-    Tag main("main");
-    Tag divProjects("div");
-    divProjects.addAttr("class", "container");
-    divProjects << generateRepoLinks("Haletas033");
-    main << divProjects;
+    main << generateRepoLinks("Haletas033");
 
     htmlFile << nav.str() << "\n";
     htmlFile << header.str() << "\n";
