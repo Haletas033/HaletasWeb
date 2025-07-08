@@ -108,7 +108,6 @@ Tag createNavLink(const std::string& href, const std::string& text)
 
 int index() {
 
-
     std::filesystem::create_directories("out");
 
     std::ofstream htmlFile("out/index.html");

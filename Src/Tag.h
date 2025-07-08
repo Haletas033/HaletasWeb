@@ -4,7 +4,10 @@
 #include<string>
 
 class Tag {
-    std::string name, content, attributes;
+protected:
+    std::string name, content;
+    std::map<std::string, std::string> attrs;
+    std::vector<Tag> children;
 
 public:
     Tag(const std::string& name) : name(name) {}
@@ -17,22 +20,36 @@ public:
 
     //Adds another tag inside this tag (nesting)
     Tag& operator<<(const Tag& other) {
-        content += other.str();
+        children.push_back(other);
         return *this;
     }
 
     //Adds an attribute like class, id, style, etc.
     Tag& addAttr(const std::string& key, const std::string& value) {
-        attributes += " " + key + "=\"" + value + "\"";
+        attrs[key] = value;
         return *this;
     }
 
     //Convert to final HTML string
-    std::string str() const {
-        return "<" + name + attributes + ">" + content + "</" + name + ">";
+    [[nodiscard]] virtual std::string str() const {
+        std::ostringstream oss;
+        oss << "<" << name;
+
+        for (const auto &[k, v] : attrs) {
+            oss << " " << k << "=\"" << v << "\"";
+        }
+
+        oss << ">";
+        oss << content;
+
+        for (const auto &child : children) {
+            oss << child.str();
+        }
+        oss << "</" << name << ">";
+        return oss.str();
     }
 
-    std::string Head() const {
+    [[nodiscard]] virtual std::string Head() const {
         return "<!DOCTYPE html>\n"
                "<html lang=\"en\">\n"
                "<head>\n"
