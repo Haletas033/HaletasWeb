@@ -9,14 +9,14 @@
 //Custom-made class to create HTML tag programmatically
 #include"Tag.h"
 
-//Callback fucntion for curl to handle HTTPS requests
+//Callback function for curl to handle HTTPS requests
 size_t writeCallBack(void* contents, size_t size, size_t nmemb, void* userp) {
 
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
 
-//Fetchs a users github repos
+//Fetches a users github repos
 std::string getRepos(const std::string& username) {
 
     CURL* curl;
@@ -53,12 +53,11 @@ std::string getRepos(const std::string& username) {
 Tag generateRepoLinks(const std::string& username) {
     std::string response = getRepos(username);
 
-    Tag container("div");
+    Tag container = div();
 
     if (response.empty()) {
-        Tag errorMsg("p");
-        errorMsg << "Failed to load repositories.";
-        container << errorMsg;
+        Tag errorMsg = p("Failed to load repositories");
+        div().put(errorMsg);
         return container;
     }
 
@@ -76,18 +75,15 @@ Tag generateRepoLinks(const std::string& username) {
         }
 
         Tag article("article");
-        article.addAttr("class", "project");
+        article.addAttr("class", "project")
+        .put(
+            Tag("a")
+                .addAttr("href", repoUrl)
+                .text(repoName)
+                .put(p(repoDescription))
+        );
 
-        Tag a("a");
-        a.addAttr("href", repoUrl);
-        a << repoName;
-
-        Tag p("p");
-        p << repoDescription;
-
-        article << a << p;
-
-        container << article;
+        container.put(article);
     }
 
     return container;
@@ -96,177 +92,101 @@ Tag generateRepoLinks(const std::string& username) {
 //Function to make a navbar
 Tag createNavLink(const std::string& href, const std::string& text)
 {
-    Tag a("a");
-    a.addAttr("href", href);
-    a << text;
+    return Tag("li").put(
+        Tag("a").addAttr("href", href).text(text)
+    );
+}
 
-    Tag li("li");
-    li << a;
-
-    return li;
+Tag buildNavbar() {
+    Tag nav("nav");
+    Tag ul("ul");
+    ul
+        .put(createNavLink("index.html", "Home"))
+        .put(createNavLink("links.html", "Links"))
+        .put(createNavLink("projects.html", "Projects"));
+    nav.put(ul);
+    return nav;
 }
 
 int index() {
-
-    std::filesystem::create_directories("out");
-
-    std::ofstream htmlFile("out/index.html");
-
-
-    if (!htmlFile.is_open()) {
-        std::cerr << "Failed to open file for writing." << std::endl;
-        return 1;
-    }
-
-    htmlFile << Tag("").Head();
-
     Tag header("header");
+    header.put(buildNavbar());
+
+    Tag hr("hr");
 
     Tag main("main");
     main.addAttr("class", "container");
 
-    //Header tags
-    Tag h1("h1");
-    Tag h2("h2");
-    Tag hr("hr");
+    main
+        .put(h1("Hello, I'm Haletas"))
+        .put(h2("Award losing C++ dev from New Zealand"))
+        .put(hr);
 
-    h1 << "Hello I'm Haletas";
-    h2 << "Award losing C++ dev from New Zealand";
+    Tag AboutMe = Tag("article")
+        .put(h3("About Me:"))
+        .put(p("Hello my name is Alex Curran."
+                   "I'm a high school student (currently attending Lakes High, Rotorua) and I enjoy programming,"
+                   "3D modeling and electronics."));
 
-    main << header << h1 << h2 << hr;
-
-    //Paragraph tags
-    Tag p("p");
-    Tag p1("p");
-
-    Tag nav("nav");
-    Tag ulNav("ul");
-    ulNav << createNavLink("index.html", "Home");
-    ulNav << createNavLink("links.html", "Links");
-    ulNav << createNavLink("projects.html", "Projects");
-    nav << ulNav;
-
-
-
-    Tag h3About("h3");
-    Tag pAbout("p");
-
-    Tag h3Skills("h3");
-    Tag pSkills("p");
-
-    Tag AboutMe("article");
     Tag Skills("article");
 
-    h3About << "About me:";
-    pAbout << "Hello my name is Alex Curran, and I'm a high school student (currently attending Lakes High, Rotorua) and I am a enjoyer of programming, 3D modeling and electronics.";
+    Skills.put(h3("Skills:"))
 
-    h3Skills << "Skills:";
-    pSkills << "- C++<br>"
-            << "- C#<br>"
-            << "- Python<br>"
-            << "- HTML<br>"
-            << "- CSS<br>"
-            << "- JS<br>";
+    .put(p(
+         "- C++<br>"
+        "- C#<br>"
+        "- Python<br>"
+        "- HTML<br>"
+        "- CSS<br>"
+        "- JS<br>"
+    ));
 
-    AboutMe << h3About << pAbout;
-    Skills << h3Skills << pSkills;
+    main.put(AboutMe).put(Skills);
 
-    main << AboutMe<< Skills;
-
-    htmlFile << nav.str() << "\n";
-    htmlFile << header.str() << "\n";
-    htmlFile << main.str() << "\n";
-
-    htmlFile << "</body>\n";
-    htmlFile << "</html>\n";
-
-    htmlFile.close();
+    WriteHTML("index.html", header, main);
 
     return 0;
 }
 
 int links() {
-    std::ofstream htmlFile("out/links.html");
-
-    if (!htmlFile.is_open()) {
-        std::cerr << "Failed to open file for writing." << std::endl;
-        return 1;
-    }
-
-    htmlFile << Tag("").Head();
-
     Tag header("header");
 
-    Tag nav("nav");
-    Tag ulNav("ul");
-    ulNav << createNavLink("index.html", "Home");
-    ulNav << createNavLink("links.html", "Links");
-    ulNav << createNavLink("projects.html", "Projects");
-    nav << ulNav;
+    header.put(buildNavbar());
 
     Tag main("main");
-
-    main.addAttr("class", "container");
-
-    Tag h1("h1");
-    h1 << "Links";
-    main << header << h1;
+    main.addAttr("class", "container")
+        .put(h1("Links"));
 
     Tag links("article");
+    links.put(
+        Tag("ul")
+            .put(createNavLink("https://github.com/Haletas033", "GitHub"))
+            .put(createNavLink("https://www.youtube.com/@Haletas3D", "YouTube"))
+    );
 
-    Tag ulLinks("ul");
-    links << ulLinks << createNavLink("https://github.com/Haletas033", "GitHub");
-    links << ulLinks << createNavLink("https://www.youtube.com/@Haletas3D", "YouTube");
-    main << links;
+    main.put(links);
 
-    htmlFile << nav.str() << "\n";
-    htmlFile << header.str() << "\n";
-    htmlFile << main.str() << "\n";
-
-    htmlFile << "</body>\n</html>\n";
-    htmlFile.close();
+    WriteHTML("links.html", header, main);
 
     return 0;
 }
 
 int projects() {
-    std::ofstream htmlFile("out/projects.html");
-
-    if (!htmlFile.is_open()) {
-        std::cerr << "Failed to open file for writing." << std::endl;
-        return 1;
-    }
-
-    htmlFile << Tag("").Head();
-
     Tag header("header");
+
+    header.put(buildNavbar());
 
     Tag main("main");
     main.addAttr("class", "container");
 
-    Tag h1("h1");
-    h1 << "Projects";
-    main << header << h1;
+    main.put(h1("Projects"));
 
-    Tag nav("nav");
-    Tag ulNav("ul");
-    ulNav << createNavLink("index.html", "Home");
-    ulNav << createNavLink("links.html", "Links");
-    ulNav << createNavLink("projects.html", "Projects");
-    nav << ulNav;
+    main.put(generateRepoLinks("Haletas033"));
 
-    main << generateRepoLinks("Haletas033");
-
-    htmlFile << nav.str() << "\n";
-    htmlFile << header.str() << "\n";
-    htmlFile << main.str() << "\n";
-
-    htmlFile << "</body>\n</html>\n";
-    htmlFile.close();
+    WriteHTML("projects.html", header, main);
 
     return 0;
 }
-
 
 int main() {
     index();

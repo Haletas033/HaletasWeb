@@ -19,8 +19,13 @@ public:
     }
 
     //Adds another tag inside this tag (nesting)
-    Tag& operator<<(const Tag& other) {
-        children.push_back(other);
+    Tag& put(const Tag& child) {
+        children.push_back(child);
+        return *this;
+    }
+
+    Tag& text(const std::string& txt) {
+        content += txt;
         return *this;
     }
 
@@ -60,6 +65,38 @@ public:
 
                "</head>\n"
                "<body>\n";
+    }
+};
+
+inline void WriteHTML(const std::string &filename, const Tag &header, const Tag &main) {
+    std::filesystem::create_directories("out");
+    std::ofstream htmlFile("out/" + filename);
+
+    if (!htmlFile.is_open()) {
+        std::cerr << "Failed to open file for writing." << std::endl;
+        return;
+    }
+
+    htmlFile << Tag("").Head() << "\n"
+             << header.str() << "\n"
+             << main.str() << "\n"
+             << "</body>\n</html>\n";
+    htmlFile.close();
+}
+
+inline Tag div() { return Tag("div"); }
+inline Tag h1(const std::string& text = "") { return Tag("h1") << text; }
+inline Tag h2(const std::string& text = "") { return Tag("h2") << text; }
+inline Tag h3(const std::string& text = "") { return Tag("h3") << text; }
+inline Tag p(const std::string& text = "") { return Tag("p") << text; }
+
+class DocumentBuilder {
+    Tag html{"html"};
+
+public:
+    DocumentBuilder& put(const Tag& child) {
+        html.put(child);
+        return *this;
     }
 };
 
