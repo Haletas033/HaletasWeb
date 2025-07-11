@@ -21,7 +21,7 @@ std::string getRepos(const std::string& username) {
 
     CURL* curl;
     CURLcode res;
-    std::string readbuffer;
+    std::string readBuffer;
     std::string url = "https://api.github.com/users/" + username + "/repos"; //Github API endpoint
 
     curl_global_init(CURL_GLOBAL_DEFAULT); //Initialize global curl state
@@ -31,7 +31,7 @@ std::string getRepos(const std::string& username) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallBack);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readbuffer);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
         res = curl_easy_perform(curl); //Perform the request and store the result in res
 
@@ -45,7 +45,7 @@ std::string getRepos(const std::string& username) {
 
 
     curl_global_cleanup(); //Clean up the global curl state
-    return readbuffer; //Return the response data
+    return readBuffer; //Return the response data
 
 }
 
@@ -74,14 +74,13 @@ Tag generateRepoLinks(const std::string& username) {
             repoDescription = "No description provided.";
         }
 
+        Tag link = Tag("a").addAttr("href", repoUrl).text(repoName);
+        Tag description = p(repoDescription);
+
         Tag article("article");
         article.addAttr("class", "project")
-        .put(
-            Tag("a")
-                .addAttr("href", repoUrl)
-                .text(repoName)
-                .put(p(repoDescription))
-        );
+               .put(link)
+               .put(description);
 
         container.put(article);
     }
@@ -124,8 +123,8 @@ int index() {
 
     Tag AboutMe = Tag("article")
         .put(h3("About Me:"))
-        .put(p("Hello my name is Alex Curran."
-                   "I'm a high school student (currently attending Lakes High, Rotorua) and I enjoy programming,"
+        .put(p("Hello my name is Alex Curran. "
+                   "I'm a high school student (currently attending Lakes High, Rotorua) and I enjoy programming, "
                    "3D modeling and electronics."));
 
     Tag Skills("article");

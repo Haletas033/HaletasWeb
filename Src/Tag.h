@@ -2,12 +2,24 @@
 #define TAG_CLASS_H
 
 #include<string>
+#include <unordered_set>
 
 class Tag {
 protected:
     std::string name, content;
     std::map<std::string, std::string> attrs;
     std::vector<Tag> children;
+
+    bool forceSelfCLosing = false;
+    bool forceNotSelfClosing = false;
+
+    static const std::unordered_set<std::string> &voidTags() {
+        static const std::unordered_set<std::string> tags = {
+            "area", "base", "br", "col", "embed", "hr", "img",
+            "input", "link", "meta", "source", "track", "wbr"
+        };
+        return tags;
+    }
 
 public:
     Tag(const std::string& name) : name(name) {}
@@ -35,6 +47,9 @@ public:
         return *this;
     }
 
+    Tag& selfClosing(){forceSelfCLosing = true; return *this;}
+    Tag& selfNotClosing(){forceNotSelfClosing = true; return *this;}
+
     //Convert to final HTML string
     [[nodiscard]] virtual std::string str() const {
         std::ostringstream oss;
@@ -44,27 +59,21 @@ public:
             oss << " " << k << "=\"" << v << "\"";
         }
 
-        oss << ">";
-        oss << content;
-
-        for (const auto &child : children) {
-            oss << child.str();
+        if (bool selfClosing = forceSelfCLosing || (voidTags().count(name) && !forceNotSelfClosing)) {
+            oss << "/>";
+        } else {
+            oss << ">";
+            oss << content;
+            for (const auto &child : children) {
+                oss << child.str();
+            }
+            oss << "</" << name << ">";
         }
-        oss << "</" << name << ">";
+
+
+
+
         return oss.str();
-    }
-
-    [[nodiscard]] virtual std::string Head() const {
-        return "<!DOCTYPE html>\n"
-               "<html lang=\"en\">\n"
-               "<head>\n"
-               "<meta charset=\"UTF-8\">\n"
-               "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-               "<link href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\" rel=\"stylesheet\">"
-               "<title>HaletasWeb</title>\n"
-
-               "</head>\n"
-               "<body>\n";
     }
 };
 
@@ -77,11 +86,22 @@ inline void WriteHTML(const std::string &filename, const Tag &header, const Tag 
         return;
     }
 
-    htmlFile << Tag("").Head() << "\n"
-             << header.str() << "\n"
-             << main.str() << "\n"
-             << "</body>\n</html>\n";
-    htmlFile.close();
+    Tag html = Tag("html").addAttr("lang", "en");
+
+    Tag head("head");
+    head
+        .put(Tag("meta").addAttr("charset", "UTF-8"))
+        .put(Tag("meta").addAttr("name", "viewport").addAttr("content", "width=device-width, initial-scale=1.0"))
+        .put(Tag("link").addAttr("href", "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css").addAttr("rel", "stylesheet"))
+        .put(Tag("title").text("HaletasWeb"));
+
+    Tag body("body");
+
+    body.put(header).put(main);
+
+    html.put(head).put(body);
+
+    htmlFile << "<!DOCTYPE html>\n" << html.str();
 }
 
 inline Tag div() { return Tag("div"); }
