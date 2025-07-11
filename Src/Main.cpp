@@ -88,6 +88,8 @@ Tag generateRepoLinks(const std::string& username) {
     return container;
 }
 
+const std::string extraStyles = "nav {position: fixed;top: 0;width: 100%; z-index: 1000;}main.container {padding-top: 4em; }";
+
 //Function to make a navbar
 Tag createNavLink(const std::string& href, const std::string& text)
 {
@@ -142,7 +144,7 @@ int index() {
 
     main.put(AboutMe).put(Skills);
 
-    WriteHTML("index.html", header, main);
+    WriteHTML("index.html", header, main, "Home", Tag("style").text(extraStyles));
 
     return 0;
 }
@@ -165,7 +167,7 @@ int links() {
 
     main.put(links);
 
-    WriteHTML("links.html", header, main);
+    WriteHTML("links.html", header, main, "Links", Tag("style").text(extraStyles));
 
     return 0;
 }
@@ -182,7 +184,7 @@ int projects() {
 
     main.put(generateRepoLinks("Haletas033"));
 
-    WriteHTML("projects.html", header, main);
+    WriteHTML("projects.html", header, main, "Projects", Tag("style").text(extraStyles));
 
     return 0;
 }

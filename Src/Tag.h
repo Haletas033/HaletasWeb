@@ -77,7 +77,7 @@ public:
     }
 };
 
-inline void WriteHTML(const std::string &filename, const Tag &header, const Tag &main) {
+inline void WriteHTML(const std::string &filename, const Tag &header, const Tag &main, const std::string &title, const Tag &extraHead = Tag("")) {
     std::filesystem::create_directories("out");
     std::ofstream htmlFile("out/" + filename);
 
@@ -93,7 +93,8 @@ inline void WriteHTML(const std::string &filename, const Tag &header, const Tag 
         .put(Tag("meta").addAttr("charset", "UTF-8"))
         .put(Tag("meta").addAttr("name", "viewport").addAttr("content", "width=device-width, initial-scale=1.0"))
         .put(Tag("link").addAttr("href", "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css").addAttr("rel", "stylesheet"))
-        .put(Tag("title").text("HaletasWeb"));
+        .put(extraHead)
+        .put(Tag("title").text(title));
 
     Tag body("body");
 
