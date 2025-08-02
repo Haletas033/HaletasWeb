@@ -6,7 +6,7 @@
 #include<nlohmann/json.hpp>
 #include<curl/curl.h>
 
-//Custom-made class to create HTML tag programmatically
+//Custom-made class to create HTML tags programmatically
 #include"Tag.h"
 
 //Callback function for curl to handle HTTPS requests
@@ -64,9 +64,12 @@ Tag generateRepoLinks(const std::string& username) {
     auto repos = nlohmann::json::parse(response);
 
     for (const auto& repo : repos) {
+        int stars = repo["stargazers_count"];
+        int forks = repo["forks_count"];
         std::string repoName = repo["name"];
         std::string repoUrl = repo["html_url"];
         std::string repoDescription;
+        std::string language;
 
         if (repo.contains("description") && !repo["description"].is_null()) {
             repoDescription = repo["description"];
@@ -74,13 +77,24 @@ Tag generateRepoLinks(const std::string& username) {
             repoDescription = "No description provided.";
         }
 
+        if (repo.contains("language") && !repo["language"].is_null()) {
+            language = repo["language"];
+        } else {
+            language = "Unknown";
+        }
+
+        std::string starsStr = std::to_string(stars);
+        std::string forksStr = std::to_string(forks);
+
         Tag link = Tag("a").addAttr("href", repoUrl).text(repoName);
         Tag description = p(repoDescription);
+        Tag otherInfo = p(starsStr + " Stars | " + forksStr + " Forks | " + language);
 
         Tag article("article");
         article.addAttr("class", "project")
                .put(link)
-               .put(description);
+               .put(description)
+               .put(otherInfo);
 
         container.put(article);
     }
