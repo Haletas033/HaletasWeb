@@ -70,9 +70,6 @@ public:
             oss << "</" << name << ">";
         }
 
-
-
-
         return oss.str();
     }
 };

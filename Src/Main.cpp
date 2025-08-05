@@ -16,7 +16,7 @@ size_t writeCallBack(void* contents, size_t size, size_t nmemb, void* userp) {
     return size * nmemb;
 }
 
-//Fetches a users github repos
+//Fetches a users GitHub repos
 std::string getRepos(const std::string& username) {
 
     CURL* curl;
@@ -86,13 +86,13 @@ Tag generateRepoLinks(const std::string& username) {
         std::string starsStr = std::to_string(stars);
         std::string forksStr = std::to_string(forks);
 
-        Tag link = Tag("a").addAttr("href", repoUrl).text(repoName);
+        Tag link = Tag("a").addAttr("href", repoUrl);
         Tag description = p(repoDescription);
         Tag otherInfo = p(starsStr + " Stars | " + forksStr + " Forks | " + language);
 
         Tag article("article");
         article.addAttr("class", "project")
-               .put(link)
+               .put(link.put(h2(repoName)))
                .put(description)
                .put(otherInfo);
 
@@ -102,7 +102,7 @@ Tag generateRepoLinks(const std::string& username) {
     return container;
 }
 
-const std::string extraStyles = "nav {position: fixed;top: 0;width: 100%; z-index: 1000;}main.container {padding-top: 4em; }";
+const std::string extraStyles = "nav {top: 0;width: 100%; z-index: 1000; padding-left: 1em;}main.container {padding-top: 4em;}";
 
 //Function to make a navbar
 Tag createNavLink(const std::string& href, const std::string& text)
@@ -145,17 +145,15 @@ int index() {
 
     Tag Skills("article");
 
-    Skills.put(h3("Skills:"))
+    Skills.put(h3("Skills:"));
 
-    .put(p(
-         "- C++<br>"
-        "- C#<br>"
-        "- Python<br>"
-        "- HTML<br>"
-        "- CSS<br>"
-        "- JS<br>"
-    ));
+    Tag ul("ul");
 
+    for (const std::string& lang : std::array<std::string, 6>{"C++", "C#", "Python", "HTML", "CSS", "JS"}) {
+        ul.put(Tag("li").text(lang));
+    }
+
+    Skills.put(ul);
     main.put(AboutMe).put(Skills);
 
     WriteHTML("index.html", header, main, "Home", Tag("style").text(extraStyles));
