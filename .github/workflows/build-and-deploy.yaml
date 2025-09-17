@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
-          path: './out'
+          path: './build/out'
 
       - name: Setup Pages
         id: pages
