@@ -14,6 +14,8 @@ target_include_directories(HaletasWeb PRIVATE
         "${CMAKE_SOURCE_DIR}/../external/cmark-0.31.1/build/src"
 )
 
+file(COPY ${CMAKE_SOURCE_DIR}/../LSIMdocs DESTINATION ${CMAKE_BINARY_DIR})
+
 # Link the static library directly
 target_link_libraries(HaletasWeb PRIVATE
         CURL::libcurl

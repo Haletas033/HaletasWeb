@@ -261,7 +261,7 @@ int LSIMDocs() {
 
     std::string html;
 
-    for (const auto &currMd : std::filesystem::directory_iterator("../../LSIMdocs")) {
+    for (const auto &currMd : std::filesystem::directory_iterator("LSIMdocs")) {
         std::ifstream file(currMd.path());
 
         std::stringstream buffer;
