@@ -31,11 +31,14 @@ jobs:
       - name: Build HaletasWeb site generator
         run: |
           mkdir -p build
-          g++ -std=c++17 -I/usr/include/cmark -o build/site Src/Main.cpp -lcurl -lcmark
+          cd build
+          cmake ..
+          cmake --build .
 
       - name: Run HaletasWeb generator
         run: |
-          ./build/site
+          cd build
+          ./HaletasWeb
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
