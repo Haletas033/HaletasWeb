@@ -26,12 +26,12 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y g++ libcurl4-openssl-dev nlohmann-json3-dev
+          sudo apt install -y g++ libcurl4-openssl-dev nlohmann-json3-dev libcmark-dev
 
       - name: Build HaletasWeb site generator
         run: |
           mkdir -p build
-          g++ -std=c++17 -o build/site Src/Main.cpp -lcurl
+          g++ -std=c++17 -I/usr/include/cmark -o build/site Src/Main.cpp -lcurl -lcmark
 
       - name: Run HaletasWeb generator
         run: |

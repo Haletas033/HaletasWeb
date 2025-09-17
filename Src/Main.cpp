@@ -3,11 +3,16 @@
 #include<fstream>
 #include<filesystem>
 
+#include <memory>
+#include <string>
+
 #include<nlohmann/json.hpp>
 #include<curl/curl.h>
 
-//Custom-made class to create HTML tags programmatically
+#include <regex>
+
 #include"Tag.h"
+#include"../external/cmark-0.31.1/src/cmark.h"
 
 //Callback function for curl to handle HTTPS requests
 size_t writeCallBack(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -102,7 +107,7 @@ Tag generateRepoLinks(const std::string& username) {
     return container;
 }
 
-const std::string extraStyles = "nav {top: 0;width: 100%; z-index: 1000; padding-left: 1em;}main.container {padding-top: 4em;}";
+const std::string extraStyles = "nav {top: 0;width: 100%; z-index: 1000; padding-left: 1em;}main.container {padding-top: 1em;}";
 
 //Function to make a navbar
 Tag createNavLink(const std::string& href, const std::string& text)
@@ -118,9 +123,20 @@ Tag buildNavbar() {
     ul
         .put(createNavLink("index.html", "Home"))
         .put(createNavLink("links.html", "Links"))
-        .put(createNavLink("projects.html", "Projects"));
+        .put(createNavLink("projects.html", "Projects"))
+        .put(createNavLink("docs.html", "Docs"));
     nav.put(ul);
     return nav;
+}
+
+std::string convertToLatex(const std::string& md) {
+    std::string result = md;
+
+    // Regex to match inline $...$
+    std::regex inlineMath(R"(\$(.+?)\$)");
+    result = std::regex_replace(result, inlineMath, R"(\\($1\\))");
+
+    return result;
 }
 
 int index() {
@@ -201,8 +217,71 @@ int projects() {
     return 0;
 }
 
+int documentation() {
+    Tag header("header");
+    header.put(buildNavbar());
+
+    Tag hr("hr");
+
+    Tag main("main");
+    main.addAttr("class", "container");
+
+    Tag docs("article");
+
+    docs
+        .put(h3()
+            .put(Tag("a").addAttr("href", "LSIMdocs.html")
+                .text("L-SIM ENGINE Documentation")))
+        .put(p("Documentation for how to use the L-SIM ENGINE"));
+
+    main
+        .put(h1("Documentation"))
+        .put(docs);
+
+    WriteHTML("docs.html", header, main, "Docs", Tag("style").text(extraStyles));
+
+    return 0;
+}
+
+int LSIMDocs() {
+    Tag header("header");
+    header.put(buildNavbar());
+
+    Tag main("main");
+    main.addAttr("class", "container");
+
+
+
+    std::string html;
+
+    for (const auto &currMd : std::filesystem::directory_iterator("../../LSIMdocs")) {
+        std::ifstream file(currMd.path());
+
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        std::string md = buffer.str();
+
+        md = convertToLatex(md);
+
+        html += cmark_markdown_to_html(md.c_str(), strlen(md.c_str()), CMARK_OPT_DEFAULT | CMARK_OPT_UNSAFE);
+        html += "<hr/>";
+
+
+        file.close();
+    }
+
+    main
+        .text(html);
+
+    WriteHTML("LSIMdocs.html", header, main, "Docs", Tag("style").text(extraStyles));
+
+    return 0;
+}
+
 int main() {
     index();
     links();
     projects();
+    documentation();
+    LSIMDocs();
 }

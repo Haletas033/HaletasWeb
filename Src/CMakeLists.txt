@@ -8,4 +8,15 @@ find_package(nlohmann_json REQUIRED)
 
 add_executable(HaletasWeb Main.cpp)
 
-target_link_libraries(HaletasWeb PRIVATE CURL::libcurl nlohmann_json::nlohmann_json)
+# Include cmark headers (source + build folder)
+target_include_directories(HaletasWeb PRIVATE
+        "${CMAKE_SOURCE_DIR}/../external/cmark-0.31.1/src"
+        "${CMAKE_SOURCE_DIR}/../external/cmark-0.31.1/build/src"
+)
+
+# Link the static library directly
+target_link_libraries(HaletasWeb PRIVATE
+        CURL::libcurl
+        nlohmann_json::nlohmann_json
+        "${CMAKE_SOURCE_DIR}/../external/cmark-0.31.1/build/src/libcmark.a"
+)
