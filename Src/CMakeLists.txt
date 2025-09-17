@@ -6,7 +6,18 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(CURL REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
-add_executable(HaletasWeb Main.cpp)
+add_executable(HaletasWeb Main.cpp
+        pages/index.h
+        pages/links.h
+        pages/documentation.h
+        pages/projects.h
+        pages/docs/LSIMdocs.h
+        utils/repos/repos.cpp
+        utils/repos/repos.h
+        utils/nav/nav.cpp
+        utils/nav/nav.h
+        utils/misc/misc.cpp
+        utils/misc/misc.h)
 
 # Include cmark headers (source + build folder)
 target_include_directories(HaletasWeb PRIVATE

@@ -1,8 +1,13 @@
 #ifndef TAG_CLASS_H
 #define TAG_CLASS_H
 
-#include<string>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <string>
 #include <unordered_set>
+#include <vector>
 
 class Tag {
 protected:
