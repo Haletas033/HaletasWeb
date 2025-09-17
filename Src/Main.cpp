@@ -68,7 +68,14 @@ Tag generateRepoLinks(const std::string& username) {
 
     auto repos = nlohmann::json::parse(response);
 
+    if (!repos.is_array()) {
+        std::cerr << "Error: GitHub API did not return a list of repos\n";
+        return container;
+    }
+
     for (const auto& repo : repos) {
+        if (!repo.is_object()) continue;
+
         int stars = repo["stargazers_count"];
         int forks = repo["forks_count"];
         std::string repoName = repo["name"];
