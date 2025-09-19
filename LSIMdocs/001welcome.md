@@ -1,0 +1,9 @@
+# Welcome to the L-SIM ENGINE Documentation
+
+---
+
+## About the Project
+
+The [L-SIM Engine](https://github.com/Haletas033/LSIMENGINE) is an open-source game engine made in [C++](https://en.wikipedia.org/wiki/C%2B%2B) using [OpenGL](https://www.opengl.org/).
+The engine aims to be a bloat-free yet capable engine designed with procedural generation and programmers in mind. 
+The engine also aims to reduce long loading times and avoid having to deal with unintuitive systems.
