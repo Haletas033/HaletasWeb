@@ -81,7 +81,9 @@ public:
 
 inline void WriteHTML(const std::string &filename, const Tag &header, const Tag &main, const std::string &title, const Tag &extraHead = Tag("")) {
     std::filesystem::create_directories("out");
+    std::filesystem::copy("LSIMdocs/imgs", "out/imgs");
     std::ofstream htmlFile("out/" + filename);
+
 
     if (!htmlFile.is_open()) {
         std::cerr << "Failed to open file for writing." << std::endl;
