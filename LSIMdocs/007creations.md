@@ -8,11 +8,11 @@ The same logic applies for lights as well although, you can only have a max of 8
 ### What if I want a different mesh type?
 If you want to change the mesh that will be spawned you can change it in the dropdown in the transformations panel.
 Currently, the engine offers 6 standard mesh types from 0 to 5.
-0. Cube (Cube is selected by default)
-1. Plane (A plane is a flat surface with no depth)
-2. Pyramid
-3. Sphere
-4. Torus (A torus is a donut-like shape)
-5. Terrain (Terrain is procedurally generated and is generated with a texture)
+1. Cube (Cube is selected by default)
+2. Plane (A plane is a flat surface with no depth)
+3. Pyramid
+4. Sphere
+5. Torus (A torus is a donut-like shape)
+6. Terrain (Terrain is procedurally generated and is generated with a texture)
 
 **EDITORS NOTE:** _To more efficiently change between mesh types you can use 0-5 on the keyboard._
