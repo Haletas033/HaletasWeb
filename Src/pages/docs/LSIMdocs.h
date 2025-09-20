@@ -21,20 +21,26 @@ namespace docs {
         Tag main("main");
         main.addAttr("class", "container");
 
-
-
         std::string html;
 
+        std::vector<std::filesystem::path> mds;
+
         for (const auto &currMd : std::filesystem::directory_iterator("LSIMdocs")) {
-            std::ifstream file(currMd.path());
+            mds.push_back(currMd);
+        }
+
+        std::sort(mds.begin(), mds.end());
+
+        for (const auto &md : mds) {
+            std::ifstream file(md);
 
             std::stringstream buffer;
             buffer << file.rdbuf();
-            std::string md = buffer.str();
+            std::string mdStr = buffer.str();
 
-            md = misc::convertToLatex(md);
+            mdStr = misc::convertToLatex(mdStr);
 
-            html += cmark_markdown_to_html(md.c_str(), strlen(md.c_str()), CMARK_OPT_DEFAULT | CMARK_OPT_UNSAFE);
+            html += cmark_markdown_to_html(mdStr.c_str(), strlen(mdStr.c_str()), CMARK_OPT_DEFAULT | CMARK_OPT_UNSAFE);
             html += "<hr/>";
 
 
