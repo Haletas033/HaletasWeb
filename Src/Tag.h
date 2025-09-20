@@ -80,10 +80,16 @@ public:
 };
 
 inline void WriteHTML(const std::string &filename, const Tag &header, const Tag &main, const std::string &title, const Tag &extraHead = Tag("")) {
-    std::filesystem::create_directories("out");
-    std::filesystem::copy("LSIMdocs/imgs", "out/imgs",
-    std::filesystem::copy_options::recursive |
-    std::filesystem::copy_options::skip_existing);
+    try {
+        std::filesystem::create_directories("out");
+        std::filesystem::copy("LSIMdocs/imgs", "out/imgs",
+        std::filesystem::copy_options::recursive |
+        std::filesystem::copy_options::overwrite_existing);
+
+    } catch (const std::filesystem::filesystem_error& e) {
+        std::cerr << "Warning: could not copy imgs: " << e.what() << '\n';
+    }
+
 
     std::ofstream htmlFile("out/" + filename);
 
