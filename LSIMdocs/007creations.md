@@ -16,3 +16,6 @@ Currently, the engine offers 6 standard mesh types from 0 to 5.
 6. Terrain (Terrain is procedurally generated and is generated with a texture)
 
 **EDITORS NOTE:** _To more efficiently change between mesh types you can use 0-5 on the keyboard._
+
+*EXTRA INFORMATION:**
+_All logic for generating these primitives (apart from terrain which can be found in `terrain.cpp`) can be found in `primitives.cpp`_
