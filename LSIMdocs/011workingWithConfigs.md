@@ -1,10 +1,11 @@
 ## Working With Configs
 After mastering the basics the next thing you should learn is how configs work.
 In L-SIM every project has its own config file.
+We use config or more generally `.json` files to avoid the need to rebuild the project every time we adjust a value.
 A config in L-SIM is a single `.json` file (**as of v1.0**) that contains information regarding engine defaults.
 Here we will take a look at a `config.json` and how we can modify it to meet our needs.
 
-**Below is the default config filel that we will be working from**
+**Below is the default config file that we will be working from**
 ````json
 {
     "shader-constants": {
