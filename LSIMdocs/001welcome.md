@@ -1,5 +1,6 @@
 # Welcome to the L-SIM ENGINE Documentation
-
+\
+_Up to date for: v1.0 | current version: v1.0_
 ---
 
 ## About the Project
