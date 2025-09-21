@@ -1,6 +1,8 @@
 ## Transforming Meshes and Lights
 While moving around a scene is cool it is basically useless if you can't move meshes and lights as well.
 To begin, first ensure that the transformation gui is **open.**
+Then you have to select the current mesh, at the moment because there is only one mesh we can enter **0**.
+Alternatively we can press **[ or ]** to move select the previous or next mesh, and because there is only 1 mesh it will go to **0**. 
 Now to move meshes and lights you can use the **arrow keys** in conjunction with **page up** and **page down.**
 At the moment this will cause the meshes to move around. To get the meshes to rotate instead press **R** on the keyboard for scale press **N** and to get back to movement press **G.**
 I find it easy to remember this like so:
