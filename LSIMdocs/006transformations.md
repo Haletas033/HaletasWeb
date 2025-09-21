@@ -15,4 +15,4 @@ Alternatively or for more precise control you can use the gui itself. Note that 
 Now if you instead want to move a light you must first press **L** for light mode then you can move the light in the same way as the mesh.
 To get back to mesh mode press **M.**
 
-**EDITORS NOTE:** _Currently you can only move lights and thus rotation and scale are **not** supported._
+**EDITORS NOTE:** _Currently you can only move lights and thus rotation and scale are **not** supported. However, new types of lights in progress for upcoming versions._
