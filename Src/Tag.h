@@ -113,10 +113,8 @@ inline void WriteHTML(const std::string &filename, const Tag &header, const Tag 
 
         //json
         .put(Tag("script").addAttr("src", "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-json.min.js"))
-        //C++
-        .put(Tag("script").addAttr("src", "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-cpp.min.js"))
-        //glsl
-        .put(Tag("script").addAttr("src", "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-glsl.min.js"))
+        //C-like
+        .put(Tag("script").addAttr("src", "https://unpkg.com/prismjs@1.30.0/components/prism-c.min.js"))
 
         //Mathjax for latex support
         .put(Tag("script")
