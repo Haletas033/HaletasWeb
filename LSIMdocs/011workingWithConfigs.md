@@ -12,6 +12,7 @@ Here we will take a look at a `config.json` and how we can modify it to meet our
       "MAX_LIGHTS": 8
     },
         "defaults": {
+            "version": "v1.0",
             "defaultWindowWidth": 1920,
             "defaultWindowHeight": 1080,
         
@@ -139,6 +140,7 @@ Now that you have an understanding of the `shader-constants` section lets move o
 ```json
 {
     "defaults": {
+        "version": "v1.0",
         "defaultWindowWidth": 1920,
         "defaultWindowHeight": 1080,
     
@@ -189,6 +191,7 @@ To make your own new defaults we should first draw our attention to `include/def
 
 struct Defaults {
     unsigned int MAX_LIGHTS = 8;
+    std::string version = "v1.0";
     unsigned int defaultWindowWidth = 1920;
     unsigned int defaultWindowHeight = 1080;
 
@@ -245,7 +248,7 @@ configDefaults.caption = config["defaults"]["caption"].get<std::string>();
 Finally, we can actually use this value by going into `main.cpp` and adding:
 ```c
 //Create a GLFW window
-GLFWwindow* window = glfwCreateWindow(engineDefaults.defaultWindowWidth, engineDefaults.defaultWindowHeight, (engineDefaults.caption + " " + workingDir).c_str(), nullptr, nullptr);
+GLFWwindow* window = glfwCreateWindow(engineDefaults.defaultWindowWidth, engineDefaults.defaultWindowHeight, (engineDefaults.caption + " " + engineDefaults.version + " " + workingDir).c_str(), nullptr, nullptr);
 ```
 replacing "L-SIM ENGINE" with `engineDefaults.caption`.
 
