@@ -24,8 +24,9 @@ Now let's go over each component in more detail.
 #### Colour:
 The L-SIM Engine uses the [ANSI colour standard](https://i.sstatic.net/9UVnC.png). This allows us to have coloured terminal outputs.
 Inside the engine however these are converted back into its rgb value to be used with [ImGui](https://github.com/ocornut/imgui).
-
-**Here is a list of every colour predefined by L-SIM:**
+<details open>
+    <summary role="button" class="outline secondary"><strong>Here is a list of every colour predefined by L-SIM:</strong></summary>
+<article>
 
 ```c
 #define BLACK "30m"
@@ -50,6 +51,8 @@ Inside the engine however these are converted back into its rgb value to be used
 #define WARNING_COLOUR "33m"
 #define INFO_COLOUR "34m"
 ```
+</article>
+</details>
 
 **EDITOR'S NOTE:**
 _For colours to work in [CLion](https://www.jetbrains.com/clion) make sure that "Emulate Terminal" is enabled_

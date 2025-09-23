@@ -6,6 +6,11 @@ A config in L-SIM is a single `.json` file (**as of v1.0**) that contains inform
 Here we will take a look at a `config.json` and how we can modify it to meet our needs.
 
 **Below is the default config file that we will be working from**
+
+<details>
+    <summary role="button" class="outline secondary"><strong>Click to see the full defaults config</strong></summary>
+<article>
+
 ````json
 {
     "shader-constants": {
@@ -63,6 +68,10 @@ Here we will take a look at a `config.json` and how we can modify it to meet our
         }
 }
 ````
+
+</article>
+</details>
+
 Now if you have worked with before this should be about all you need to get started.
 However, if you have not used or even seen a `.json` file before don't worry, by the end of this page you should have a good enough understanding to work with config files in L-SIM and even use them in other applications.
 Every `.json` file begins with `{` and ends with `}`. Between these 2 braces are a set of key-value pairs and arrays.
@@ -137,6 +146,10 @@ at the top of every shader. We can also use these in engine itself, but we will 
 
 Now that you have an understanding of the `shader-constants` section lets move onto the next section `defaults`.
 
+<details>
+    <summary role="button" class="outline secondary"><strong>Click to see the full defaults config</strong></summary>
+<article>
+
 ```json
 {
     "defaults": {
@@ -171,6 +184,9 @@ Now that you have an understanding of the `shader-constants` section lets move o
     }
 }
 ```
+</article>
+</details>
+
 If you knew nothing about json before this part should be somewhat clear to you now.
 The `defaults` section stores all the information used by the engine at runtime.
 
@@ -179,8 +195,10 @@ Over all the `defaults` section is pretty simple, but **as of v1.0** you must en
 
 #### Making our own
 To make your own new defaults we should first draw our attention to `include/defaults.h`.
+<details>
+    <summary role="button" class="outline secondary"><strong>Click to see the full defaults file</strong></summary>
+<article>
 
-**Here is the default defaults file**
 ```c
 //
 // Created by halet on 9/5/2025.
@@ -228,13 +246,17 @@ struct Defaults {
 #endif //DEFAULTS_H
 ```
 
+</article>
+</details>
 You should be able to immediately see that it is almost the same as the `defaults` section in `config.json`.
 
 In this example we will add a new default for the caption at the top of the window.
 To do this we can first add it to `defaults.h` in this case we can do:
+
 ```c
 std::string caption = "L-SIM ENGINE";
 ```
+
 Now we can go into `config.json` and add:
 ```json
 {
@@ -254,7 +276,10 @@ replacing "L-SIM ENGINE" with `engineDefaults.caption`.
 
 Now we will look at the final part which is `loggers`.
 
-**Here it is**
+<details open>
+    <summary role="button" class="outline secondary"><strong>Here it is</strong></summary>
+<article>
+
 ```json
 {
   "loggers": {
@@ -279,6 +304,9 @@ Now we will look at the final part which is `loggers`.
   }
 }
 ```
+</article>
+</details>
+
 At the moment we have 3 loggers `stdInfo`, `stdWarn`, and `stdError`. While we can't change these names we can change some of the values.
 
 First lets change the colours. To do this we simply replace `colour` field with how desired colour (colours will be covered in more details in the logger section).
