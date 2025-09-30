@@ -55,7 +55,7 @@ if (Gui::Node* nodeToDelete = Gui::FindNodeByMesh(Gui::root, mesh)) {
     Gui::DeleteNode(nodeToDelete); // This handles reparenting children
 }
 
-scene.meshes.erase(scene.meshes.begin() + mesh);
+scene.meshes.erase(scene.meshes.begin() + meshIndex);
 ```
 #### Changing a Property of a Mesh
 ```c
