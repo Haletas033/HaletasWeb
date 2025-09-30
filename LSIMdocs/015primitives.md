@@ -11,6 +11,6 @@ _tileScale is the size of the texture. A tileScale of 10 will mean the texture w
 
 ### Adding primitive to a Scene:
 ```c
-Mesh foo{GenerateSphere()};
-scene.meshes.pushback(foo);
+Mesh mesh{GenerateSphere()};
+scene.meshes.pushback(mesh);
 ```
