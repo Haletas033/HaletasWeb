@@ -30,7 +30,11 @@ class YourClasName final : public Script {
 REGISTER_SCRIPT(YourClassName) //Remember this!!!
 ```
 
-Doing this creates your script and registers it with LSIM if you forget to register your script nothing will happen, and you will become very confused as to why so remember it.
+Doing this creates your script and registers it with LSIM if you forget to register your script nothing will happen, and you will become very confused as to why. So remember it!
+
+The LSIM Engine offers 2 default functions for scripts these being:
+* `void Start() override;` _Called at the start of LSIM_
+* `void Update(const float deltaTime) override;` _Called every frame_
 
 How you can go ahead and write your code, but before you do here are some useful `extern`s you will probably need:
 
