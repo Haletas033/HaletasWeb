@@ -20,6 +20,7 @@ target_include_directories(HaletasWeb PRIVATE
 )
 
 file(COPY ${CMAKE_SOURCE_DIR}/LSIMdocs DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/scripts DESTINATION ${CMAKE_BINARY_DIR})
 
 # Link the static library directly
 target_link_libraries(HaletasWeb PRIVATE

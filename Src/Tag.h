@@ -82,7 +82,19 @@ public:
 inline void WriteHTML(const std::string &filename, const Tag &header, const Tag &main, const std::string &title, const Tag &extraHead = Tag("")) {
     try {
         std::filesystem::create_directories("out");
+
+        //Copy docs imgs
         std::filesystem::copy("LSIMdocs/imgs", "out/imgs",
+        std::filesystem::copy_options::recursive |
+        std::filesystem::copy_options::overwrite_existing);
+
+        //Copy skills imgs
+        std::filesystem::copy("skills", "out/imgs/skills",
+        std::filesystem::copy_options::recursive |
+        std::filesystem::copy_options::overwrite_existing);
+
+        //Copy scripts
+        std::filesystem::copy("scripts", "out/scripts",
         std::filesystem::copy_options::recursive |
         std::filesystem::copy_options::overwrite_existing);
 
@@ -119,6 +131,11 @@ inline void WriteHTML(const std::string &filename, const Tag &header, const Tag 
         //Mathjax for latex support
         .put(Tag("script")
             .addAttr("src", "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"))
+
+        //Matter.js for a bit of phsyics
+        .put(Tag("script")
+                .addAttr("src", "https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"))
+
         .put(extraHead)
         .put(Tag("title").text(title));
 

@@ -33,16 +33,11 @@ inline void index() {
 
     Tag Skills("article");
 
-    Skills.put(h3("Skills:"));
+    Skills.addAttr("id", "skills").put(Tag("h1").text("Ball pit of skills"));
 
-    Tag ul("ul");
-
-    for (const std::string& lang : std::array<std::string, 6>{"C++", "C#", "Python", "HTML", "CSS", "JS"}) {
-        ul.put(Tag("li").text(lang));
-    }
-
-    Skills.put(ul);
     main.put(AboutMe).put(Skills);
+
+    main.put(Tag("script").addAttr("src", "scripts/skillBallPit.js"));
 
     WriteHTML("index.html", header, main, "Home", Tag("style").text(misc::extraStyles));
 }
