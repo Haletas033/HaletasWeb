@@ -3,6 +3,7 @@
 #include "pages/projects.h"
 #include "pages/documentation.h"
 #include "pages/docs/LSIMdocs.h"
+#include "scripts/skillBallPit.h"
 
 int main() {
     index();
@@ -10,4 +11,5 @@ int main() {
     projects();
     documentation();
     docs::LSIMDocs();
+    skillBallPit();
 }

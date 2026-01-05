@@ -9,7 +9,11 @@ find_package(nlohmann_json REQUIRED)
 add_executable(HaletasWeb Src/Main.cpp
         Src/utils/repos/repos.cpp
         Src/utils/nav/nav.cpp
-        Src/utils/misc/misc.cpp)
+        Src/utils/misc/misc.cpp
+        Src/js.h
+        Src/scripts/skillBallPit.h
+        Src/js.cpp
+)
 
 add_subdirectory(external/cmark-0.31.1)
 
