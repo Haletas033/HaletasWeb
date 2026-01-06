@@ -39,7 +39,7 @@ extern bool nextInitializedIsRequired;
 template <typename T = void>
 class Variable {
     const VarType type;
-    const std::type_index staticType = typeid(void);
+    std::type_index staticType = typeid(void);
     const bool staticallyTyped = false;
     const std::string name;
     bool initialized = false;
@@ -76,6 +76,10 @@ public:
         return initialized;
     }
 
+    [[nodiscard]] std::string getName() const {
+        return name;
+    }
+
     template <typename V>
     Variable& operator=(V object) {
         if (type != CONSTANT || !isInitialized()) {
@@ -84,7 +88,7 @@ public:
                     throw std::logic_error(std::string("Expected type ") + staticType.name() + " got " + typeid(V).name() + " instead.");
             }
             std::string assign;
-            if constexpr(!std::is_same_v<V, std::string> && !std::is_same_v<V, JSObject>) assign = " = " + std::to_string(object);
+            if constexpr(!std::is_convertible_v<V, std::string>) assign = " = " + std::to_string(object);
             else if (std::is_same_v<V, JSObject>) assign = " = " + std::string(object);
             else assign = " = \"" + std::string(object) + "\"";
 
@@ -99,6 +103,8 @@ public:
             expectedNextInitialized = nullptr;
             nextInitializedIsRequired = false;
 
+            staticType = typeid(V);
+
             return *this;
         }
         throw std::logic_error("Can't modify const variable \"" + this->name + "\" Consider using LET or VAR instead.");
@@ -107,12 +113,15 @@ public:
     //Arithmetic
     template <typename V>
     void IsLegal() const {
-        if constexpr (!std::is_convertible_v<V, T>)
+        if constexpr (!std::is_convertible_v<V, T> && !std::is_same_v<T, void> && !std::is_same_v<V, void>)
             throw std::logic_error(std::string("Can't do arithmetic on ") + typeid(T).name() + " and " + typeid(V).name());
         else if (!this->initialized)
             throw std::logic_error(std::string("Can't do arithmetic on uninitialized variable"));
         else if (this != expectedNextInitialized && nextInitializedIsRequired)
             throw std::logic_error(std::string("Tried to do arithmetic before initialization of a const variable"));
+        else if (this->staticType != typeid(V)) {
+            throw std::logic_error(std::string("Tried to do arithmetic on ") + staticType.name() + " and " + typeid(V).name());
+        }
     }
 
     //Add
@@ -125,7 +134,7 @@ public:
     template <typename V>
     void operator+(Variable<V> &object) {
         IsLegal<V>();
-        const std::string add = this->name + " + " + object.name + ";\n";
+        const std::string add = this->name + " + " + object.getName() + ";\n";
         js+=add;
     }
 
@@ -139,7 +148,7 @@ public:
     template <typename V>
     void operator-(Variable<V> &object) {
         IsLegal<V>();
-        const std::string minus = this->name + " - " + object.name + ";\n";
+        const std::string minus = this->name + " - " + object.getName() + ";\n";
         js+=minus;
     }
 
@@ -153,7 +162,7 @@ public:
     template <typename V>
     void operator*(Variable<V> &object) {
         IsLegal<V>();
-        const std::string multiply = this->name + " * " + object.name + ";\n";
+        const std::string multiply = this->name + " * " + object.getName() + ";\n";
         js+=multiply;
     }
 
@@ -167,7 +176,7 @@ public:
     template <typename V>
     void operator/(Variable<V> &object) {
         IsLegal<V>();
-        const std::string divide = this->name + " / " + object.name + ";\n";
+        const std::string divide = this->name + " / " + object.getName() + ";\n";
         js+=divide;
     }
 };

@@ -10,12 +10,15 @@
 
 #include "../js.h"
 
-inline void skillBallPit() {
-    Variable<int> foo(LET, "foo"); foo = 50;
-    Variable<int> bar(CONSTANT, "bar"); bar = 40;
+#define test skillBallPit
 
-    foo = 10;
+inline void test() {
+    Variable<int> foo(LET, "foo"); foo = 50;
+    Variable<int> bar(LET, "bar"); bar = 40;
+
+    foo = 1;
     bar = 10;
+    foo + bar;
     std::cout << js;
 }
 
