@@ -13,14 +13,19 @@
 #define test skillBallPit
 
 inline void test() {
-    Variable foo(LET, "foo"); foo = 50;
-    Variable bar(LET, "bar"); bar = 40;
+    Variable Engine(CONSTANT, "Engine");                   Engine = JSObject("Matter.Engine");
+    Variable Render(CONSTANT, "Render");                   Render = JSObject("Matter.Render");
+    Variable Runner(CONSTANT, "Runner");                   Runner = JSObject("Matter.Runner");
+    Variable Bodies(CONSTANT, "Bodies");                   Bodies = JSObject("Matter.Bodies");
+    Variable Common(CONSTANT, "Common");                   Common = JSObject("Matter.Common");
+    Variable Mouse(CONSTANT, "Mouse");                     Mouse = JSObject("Matter.Mouse");
+    Variable MouseConstraint(CONSTANT, "MouseConstraint"); MouseConstraint = JSObject("Matter.MouseConstraint");
+    Variable Composite(CONSTANT, "Composite");             Composite = JSObject("Matter.Composite");
+    Variable Composites(CONSTANT, "Composites");           Composites = JSObject("Matter.Composites");
+    Variable engine(LET, "engine");                        engine = JSObject("Engine.create()");
+    Variable world(LET, "world");                          engine = JSObject("engine.world()");
 
-    foo = 1;
-    bar = 10;
-    foo + bar;
-    foo + 50;
-    bar + 40;
+    Variable skills(CONSTANT, "skills"); skills = std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"};
     std::cout << js;
 }
 

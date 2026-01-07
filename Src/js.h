@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <utility>
 #include <ostream>
+#include <vector>
 
 //Used when you need to reference a variable or something from a js file
 struct JSObject {
@@ -35,6 +36,12 @@ template<typename T>
 class Variable;
 extern void *expectedNextInitialized;
 extern bool nextInitializedIsRequired;
+
+template<typename T>
+struct is_vector : std::false_type {};
+
+template<typename T, typename Alloc>
+struct is_vector<std::vector<T, Alloc>> : std::true_type {};
 
 template <typename T = void>
 class Variable {
@@ -81,6 +88,20 @@ public:
     }
 
     template <typename V>
+    static std::string ArrayToString(const std::vector<V> &array) {
+        std::string output = "[";
+
+        for (auto i : array) {
+            if constexpr(std::is_same_v<V, std::string>) output += + "\"" + i + "\",";
+            else output += std::to_string(i) + ",";
+        }
+        //Remove extra comma
+        output.pop_back();
+
+        return  output + "]";
+    }
+
+    template <typename V>
     Variable& operator=(V object) {
         if (type != CONSTANT || !isInitialized()) {
             if (staticallyTyped) {
@@ -88,8 +109,9 @@ public:
                     throw std::logic_error(std::string("Expected type ") + staticType.name() + " got " + typeid(V).name() + " instead.");
             }
             std::string assign;
-            if constexpr(!std::is_convertible_v<V, std::string>) assign = " = " + std::to_string(object);
-            else if (std::is_same_v<V, JSObject>) assign = " = " + std::string(object);
+            if constexpr (!std::is_convertible_v<V, std::string> && !is_vector<V>::value) assign = " = " + std::to_string(object);
+            else if constexpr (is_vector<V>::value) assign = " = " + ArrayToString(object);
+            else if constexpr (std::is_same_v<V, JSObject>) assign = " = " + std::string(object);
             else assign = " = \"" + std::string(object) + "\"";
 
             if (!expectedNextInitialized) js+=this->name;
@@ -189,22 +211,6 @@ public:
     }
 };
 
-template <typename T>
- std::ostream& operator<<(std::ostream& os, const Variable<T>& var) {
-    if (!var.isInitialized()) return os << "Tried to print uninitialized variable";
 
-    const auto value = var.value();
-    if (value.type() == typeid(int)) return os << std::any_cast<int>(value);
-    if (value.type() == typeid(double)) return os << std::any_cast<double>(value);
-    if (value.type() == typeid(float)) return os << std::any_cast<float>(value);
-    if (value.type() == typeid(char)) return os << std::any_cast<char>(value);
-    if (value.type() == typeid(const char*)) return os << std::any_cast<const char*>(value);
-    if (value.type() == typeid(std::string)) return os << std::any_cast<std::string>(value);
-    if (value.type() == typeid(JSObject)) {
-        const JSObject &obj = std::any_cast<JSObject>(value);
-        return os << obj.object << " (as raw text)";
-    }
-    return os << "Unprintable Variable Type: " << value.type().name();
-}
 
 #endif //JS_H
