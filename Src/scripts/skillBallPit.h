@@ -15,6 +15,8 @@
 
 
 inline void test() {
+    Console::Log("Hello, World");
+
     Variable Engine(CONSTANT, "Engine");                   Engine = JSObject("Matter.Engine");
     Variable Render(CONSTANT, "Render");                   Render = JSObject("Matter.Render");
     Variable Runner(CONSTANT, "Runner");                   Runner = JSObject("Matter.Runner");
@@ -24,6 +26,7 @@ inline void test() {
     Variable MouseConstraint(CONSTANT, "MouseConstraint"); MouseConstraint = JSObject("Matter.MouseConstraint");
     Variable Composite(CONSTANT, "Composite");             Composite = JSObject("Matter.Composite");
     Variable Composites(CONSTANT, "Composites");           Composites = JSObject("Matter.Composites");
+
     Variable engine(LET, "engine");                        engine = JSObject("Engine.create()");
     Variable world(LET, "world");                          engine = JSObject("engine.world()");
 

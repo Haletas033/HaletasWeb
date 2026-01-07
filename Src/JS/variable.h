@@ -134,6 +134,8 @@ public:
         throw std::logic_error("Can't modify const variable \"" + this->name + "\" Consider using LET or VAR instead.");
     }
 
+private:
+
     //Arithmetic
     template <typename V>
     void IsLegalLiteral() const {
@@ -155,6 +157,8 @@ public:
             throw std::logic_error(std::string("Tried to do arithmetic on ") + staticType.name() + " and " + other.staticType.name());
         }
     }
+
+public:
 
     //Add
     template <typename V>

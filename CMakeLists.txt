@@ -14,6 +14,7 @@ add_executable(HaletasWeb Src/Main.cpp
         Src/scripts/skillBallPit.h
         Src/JS/variable.h
         Src/JS/js.h
+        Src/JS/console.h
 )
 
 add_subdirectory(external/cmark-0.31.1)

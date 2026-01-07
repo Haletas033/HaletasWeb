@@ -8,5 +8,6 @@
 //Header for all js DSL headers
 #include "jsCore.h"
 #include "variable.h"
+#include "console.h"
 
 #endif //JS_H
