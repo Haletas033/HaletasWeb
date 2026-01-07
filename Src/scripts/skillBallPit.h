@@ -13,12 +13,14 @@
 #define test skillBallPit
 
 inline void test() {
-    Variable<int> foo(LET, "foo"); foo = 50;
-    Variable<int> bar(LET, "bar"); bar = 40;
+    Variable foo(LET, "foo"); foo = 50;
+    Variable bar(LET, "bar"); bar = 40;
 
     foo = 1;
     bar = 10;
     foo + bar;
+    foo + 50;
+    bar + 40;
     std::cout << js;
 }
 

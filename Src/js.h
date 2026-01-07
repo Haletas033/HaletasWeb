@@ -112,28 +112,36 @@ public:
 
     //Arithmetic
     template <typename V>
-    void IsLegal() const {
+    void IsLegalLiteral() const {
         if constexpr (!std::is_convertible_v<V, T> && !std::is_same_v<T, void> && !std::is_same_v<V, void>)
             throw std::logic_error(std::string("Can't do arithmetic on ") + typeid(T).name() + " and " + typeid(V).name());
         else if (!this->initialized)
             throw std::logic_error(std::string("Can't do arithmetic on uninitialized variable"));
         else if (this != expectedNextInitialized && nextInitializedIsRequired)
             throw std::logic_error(std::string("Tried to do arithmetic before initialization of a const variable"));
-        else if (this->staticType != typeid(V)) {
-            throw std::logic_error(std::string("Tried to do arithmetic on ") + staticType.name() + " and " + typeid(V).name());
+
+    }
+
+    void IsLegalVariable(Variable& other) const {
+        if (!this->initialized)
+            throw std::logic_error(std::string("Can't do arithmetic on uninitialized variable"));
+        if (this != expectedNextInitialized && nextInitializedIsRequired)
+            throw std::logic_error(std::string("Tried to do arithmetic before initialization of a const variable"));
+        if (this->staticType != other.staticType) {
+            throw std::logic_error(std::string("Tried to do arithmetic on ") + staticType.name() + " and " + other.staticType.name());
         }
     }
 
     //Add
     template <typename V>
     void operator+(V object) {
-        IsLegal<V>();
+        IsLegalLiteral<V>();
         const std::string add = this->name + " + " + std::to_string(object) + ";\n";
         js+=add;
     }
     template <typename V>
     void operator+(Variable<V> &object) {
-        IsLegal<V>();
+        IsLegalVariable(object);
         const std::string add = this->name + " + " + object.getName() + ";\n";
         js+=add;
     }
@@ -141,13 +149,13 @@ public:
     //Subtract
     template <typename V>
     void operator-(V object) {
-        IsLegal<V>();
+        IsLegalLiteral<V>();
         const std::string minus = this->name + " - " + std::to_string(object) + ";\n";
         js+=minus;
     }
     template <typename V>
     void operator-(Variable<V> &object) {
-        IsLegal<V>();
+        IsLegalVariable(object);
         const std::string minus = this->name + " - " + object.getName() + ";\n";
         js+=minus;
     }
@@ -155,13 +163,13 @@ public:
     //Multiply
     template <typename V>
     void operator*(V object) {
-        IsLegal<V>();
+        IsLegalLiteral<V>();
         const std::string multiply = this->name + " * " + std::to_string(object) + ";\n";
         js+=multiply;
     }
     template <typename V>
     void operator*(Variable<V> &object) {
-        IsLegal<V>();
+        IsLegalVariable(object);
         const std::string multiply = this->name + " * " + object.getName() + ";\n";
         js+=multiply;
     }
@@ -169,13 +177,13 @@ public:
     //Divide
     template <typename V>
     void operator/(V object) {
-        IsLegal<V>();
+        IsLegalLiteral<V>();
         const std::string divide = this->name + " / " + std::to_string(object) + ";\n";
         js+=divide;
     }
     template <typename V>
     void operator/(Variable<V> &object) {
-        IsLegal<V>();
+        IsLegalVariable(object);
         const std::string divide = this->name + " / " + object.getName() + ";\n";
         js+=divide;
     }
