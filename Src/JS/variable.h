@@ -1,11 +1,10 @@
 //
-// Created by halet on 1/5/2026.
+// Created by halet on 1/7/2026.
 //
 
-//A JavaScript DSL
+#ifndef VARIABLE_H
+#define VARIABLE_H
 
-#ifndef JS_H
-#define JS_H
 #include <any>
 #include <stdexcept>
 #include <string>
@@ -14,6 +13,7 @@
 #include <utility>
 #include <ostream>
 #include <vector>
+#include "jsCore.h"
 
 //Used when you need to reference a variable or something from a js file
 struct JSObject {
@@ -28,8 +28,6 @@ enum VarType {
     LET,
     VAR
 };
-
-inline std::string js;
 
 inline std::unordered_map<VarType, std::string> VarTypeToString = {
     {CONSTANT, "const"},
@@ -61,9 +59,9 @@ public:
         std::enable_if_t<std::is_same_v<U, void>, int> = 0)
             : type(t), name(std::move(n))
     {
-        if (this == expectedNextInitialized) js+=";\n";
+        if (this == expectedNextInitialized) JS::js+=";\n";
         const std::string variable = VarTypeToString[t] + " " + name;
-        js += variable;
+        JS::js += variable;
         expectedNextInitialized = static_cast<void*>(this);
         nextInitializedIsRequired = type == CONSTANT;
     }
@@ -74,11 +72,11 @@ public:
         std::enable_if_t<!std::is_same_v<U, void>, int> = 0)
             : type(t), staticType(typeid(T)), staticallyTyped(true), name(std::move(n))
     {
-        if (!nextInitializedIsRequired) js+=";\n";
+        if (!nextInitializedIsRequired) JS::js+=";\n";
         else throw std::logic_error("Const variable wasn't initialized");
 
         const std::string variable = VarTypeToString[t] + " " + name;
-        js += variable;
+        JS::js += variable;
         expectedNextInitialized = static_cast<void*>(this);
         nextInitializedIsRequired = type == CONSTANT;
     }
@@ -118,10 +116,10 @@ public:
             else if constexpr (std::is_same_v<V, JSObject>) assign = " = " + std::string(object);
             else assign = " = \"" + std::string(object) + "\"";
 
-            if (!expectedNextInitialized) js+=this->name;
+            if (!expectedNextInitialized) JS::js+=this->name;
 
-            js+=assign;
-            if (this == expectedNextInitialized || !nextInitializedIsRequired) js+=";\n";
+            JS::js+=assign;
+            if (this == expectedNextInitialized || !nextInitializedIsRequired) JS::js+=";\n";
             else throw std::logic_error("Variable initialized before uninitialized const variable");
 
             initialized = true;
@@ -163,13 +161,13 @@ public:
     void operator+(V object) {
         IsLegalLiteral<V>();
         const std::string add = this->name + " + " + std::to_string(object) + ";\n";
-        js+=add;
+        JS::js+=add;
     }
     template <typename V>
     void operator+(Variable<V> &object) {
         IsLegalVariable(object);
         const std::string add = this->name + " + " + object.getName() + ";\n";
-        js+=add;
+        JS::js+=add;
     }
 
     //Subtract
@@ -177,13 +175,13 @@ public:
     void operator-(V object) {
         IsLegalLiteral<V>();
         const std::string minus = this->name + " - " + std::to_string(object) + ";\n";
-        js+=minus;
+        JS::js+=minus;
     }
     template <typename V>
     void operator-(Variable<V> &object) {
         IsLegalVariable(object);
         const std::string minus = this->name + " - " + object.getName() + ";\n";
-        js+=minus;
+        JS::js+=minus;
     }
 
     //Multiply
@@ -191,13 +189,13 @@ public:
     void operator*(V object) {
         IsLegalLiteral<V>();
         const std::string multiply = this->name + " * " + std::to_string(object) + ";\n";
-        js+=multiply;
+        JS::js+=multiply;
     }
     template <typename V>
     void operator*(Variable<V> &object) {
         IsLegalVariable(object);
         const std::string multiply = this->name + " * " + object.getName() + ";\n";
-        js+=multiply;
+        JS::js+=multiply;
     }
 
     //Divide
@@ -205,18 +203,14 @@ public:
     void operator/(V object) {
         IsLegalLiteral<V>();
         const std::string divide = this->name + " / " + std::to_string(object) + ";\n";
-        js+=divide;
+        JS::js+=divide;
     }
     template <typename V>
     void operator/(Variable<V> &object) {
         IsLegalVariable(object);
         const std::string divide = this->name + " / " + object.getName() + ";\n";
-        js+=divide;
+        JS::js+=divide;
     }
 };
 
-
-
-
-
-#endif //JS_H
+#endif //VARIABLE_H

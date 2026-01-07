@@ -8,9 +8,11 @@
 
 #endif //SKILLBALLPIT_H
 
-#include "../js.h"
+#include "../JS/js.h"
 
 #define test skillBallPit
+
+
 
 inline void test() {
     Variable Engine(CONSTANT, "Engine");                   Engine = JSObject("Matter.Engine");
@@ -26,6 +28,7 @@ inline void test() {
     Variable world(LET, "world");                          engine = JSObject("engine.world()");
 
     Variable skills(CONSTANT, "skills"); skills = std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"};
-    std::cout << js;
+
+    std::cout << JS::js;
 }
 
