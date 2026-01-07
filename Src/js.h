@@ -29,13 +29,17 @@ enum VarType {
     VAR
 };
 
-extern std::string js;
-extern std::unordered_map<VarType, std::string> VarTypeToString;
+inline std::string js;
 
-template<typename T>
-class Variable;
-extern void *expectedNextInitialized;
-extern bool nextInitializedIsRequired;
+inline std::unordered_map<VarType, std::string> VarTypeToString = {
+    {CONSTANT, "const"},
+    {LET, "let"},
+    {VAR, "var"}
+};
+
+inline void *expectedNextInitialized = nullptr;
+
+inline bool nextInitializedIsRequired = false;
 
 template<typename T>
 struct is_vector : std::false_type {};
