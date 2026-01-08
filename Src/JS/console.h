@@ -11,6 +11,7 @@
 class Console {
 private:
 
+    //For literals
     template <typename  T>
     static void ConsoleBase(const T &object, const std::string& funcName) {
         const std::string consoleFuncName = "console." + funcName;
@@ -24,7 +25,19 @@ private:
         else JS::js+=std::string(consoleFuncName + "(\"") + object + "\");\n";
     }
 
+    //For variables
+    template <typename T>
+    static void ConsoleBase(const Variable<T> &object, const std::string& funcName) {
+        const std::string consoleFuncName = "console." + funcName;
+
+        if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
+            throw std::logic_error("Tried to call " + consoleFuncName + " before initialization of a const variable.");
+
+        JS::js+=consoleFuncName + "(" + object.getName() + ");\n";
+    }
+
 public:
+    //Non variable
     template <typename T>
     static void Log(const T &object) { ConsoleBase(object, "log"); }
     template <typename T>

@@ -92,7 +92,6 @@ public:
     template <typename V>
     static std::string ArrayToString(const std::vector<V> &array) {
         std::string output = "[";
-
         for (auto i : array) {
             if constexpr(std::is_same_v<V, std::string>) output += + "\"" + i + "\",";
             else output += std::to_string(i) + ",";

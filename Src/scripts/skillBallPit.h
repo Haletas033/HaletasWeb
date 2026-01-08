@@ -12,8 +12,6 @@
 
 #define test skillBallPit
 
-
-
 inline void test() {
     Console::Log("Hello, World");
 
@@ -30,10 +28,11 @@ inline void test() {
     Variable engine(LET, "engine");                        engine = JSObject("Engine.create()");
     Variable world(LET, "world");                          engine = JSObject("engine.world()");
 
-    Variable skills(CONSTANT, "skills"); skills = std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"};
+    Variable<std::vector<std::string>> skills(CONSTANT, "skills"); skills = std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"};
 
-    Console::Log(std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"});
+    Console::Log(skills);
 
     std::cout << JS::js;
 }
+
 
