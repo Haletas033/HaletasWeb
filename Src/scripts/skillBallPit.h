@@ -28,6 +28,11 @@ inline void test() {
     Variable engine(LET, "engine");                        engine = JSObject("Engine.create()");
     Variable world(LET, "world");                          engine = JSObject("engine.world()");
 
+    Variable foo(LET, "foo"); foo = 10;
+    Variable bar(LET, "bar"); bar = 20;
+
+    foo = foo+bar;
+
     Variable<std::vector<std::string>> skills(CONSTANT, "skills"); skills = std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"};
 
     Console::Log(skills);

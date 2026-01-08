@@ -133,6 +133,33 @@ public:
         throw std::logic_error("Can't modify const variable \"" + this->name + "\" Consider using LET or VAR instead.");
     }
 
+    template <typename V>
+    Variable& operator=(Variable<V> &object) {
+        if (type != CONSTANT || !isInitialized()) {
+            if (staticallyTyped) {
+                if constexpr (!std::is_convertible_v<V, T>)
+                    throw std::logic_error(std::string("Expected type ") + staticType.name() + " got " + object.staticType + " instead.");
+            }
+            const std::string assign = " = " + object.getName();
+
+            if (!expectedNextInitialized) JS::js+=this->name;
+
+            JS::js+=assign;
+            if (this == expectedNextInitialized || !nextInitializedIsRequired) JS::js+=";\n";
+            else throw std::logic_error("Variable initialized before uninitialized const variable");
+
+            initialized = true;
+
+            expectedNextInitialized = nullptr;
+            nextInitializedIsRequired = false;
+
+            staticType = typeid(V);
+
+            return *this;
+        }
+        throw std::logic_error("Can't modify const variable \"" + this->name + "\" Consider using LET or VAR instead.");
+    }
+
 private:
 
     //Arithmetic
