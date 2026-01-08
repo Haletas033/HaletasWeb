@@ -32,6 +32,8 @@ inline void test() {
 
     Variable skills(CONSTANT, "skills"); skills = std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"};
 
+    Console::Log(std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"});
+
     std::cout << JS::js;
 }
 

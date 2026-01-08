@@ -18,7 +18,8 @@ private:
         if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
             throw std::logic_error("Tried to call " + consoleFuncName + " before initialization of a const variable.");
 
-        if constexpr (!std::is_convertible_v<T, std::string>) JS::js+=std::string(consoleFuncName + "(") + std::to_string(object) + ");\n";
+        if constexpr (is_vector<T>::value) JS::js+=consoleFuncName + "(" + Variable<>::ArrayToString(object) + ");\n";
+        else if constexpr (!std::is_convertible_v<T, std::string>) JS::js+=std::string(consoleFuncName + "(") + std::to_string(object) + ");\n";
         else if constexpr (std::is_same_v<T, JSObject>) JS::js+=std::string(consoleFuncName + "(") + std::string(object) + ");\n";
         else JS::js+=std::string(consoleFuncName + "(\"") + object + "\");\n";
     }
