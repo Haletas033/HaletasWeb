@@ -241,6 +241,41 @@ public:
         const std::string divide = this->name + " / " + object.getName() + ";\n";
         JS::js+=divide;
     }
-};
+
+    template <typename V>
+    void AddArg(V&& arg) {
+        if constexpr (is_vector<std::decay_t<V>>::value) JS::js+=ArrayToString(arg) + ",";
+        else if constexpr (std::is_same_v<std::decay_t<decltype(arg)>, JSObject>) JS::js+=std::string(arg) + ",";
+        else if constexpr (std::is_convertible_v<decltype(arg), std::string>) JS::js+=std::string("\"") + arg + "\"" + ",";
+        else JS::js+=std::to_string(arg) + ",";
+    }
+
+    template <typename V>
+    static void AddArg(Variable<V>& arg) {
+        JS::js+=arg.getName() + std::string(",");
+    }
+
+    //Use () to call functions of variables because . is not overloadable
+    template <typename V, typename... Args>
+    void operator()(V object, Args&&... args) {
+        if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
+            throw std::logic_error(std::string("Tried to call function \"") + object + "\" on \"" + this->name + "\" before initialization of a const variable");
+
+        //Only support string types for now because there isn't a module class
+        if constexpr (std::is_convertible_v<V, std::string>) JS::js+=this->name + "." + object + "(";
+        else throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
+
+        //Add arguments
+        auto functionArgs = std::forward_as_tuple(std::forward<Args>(args)...);
+        std::apply([&](auto&&... arg){
+            (([&]{
+                AddArg(arg);
+            }()), ...);
+        }, std::forward_as_tuple(std::forward<Args>(args)...));
+
+        //Close function
+        JS::js.pop_back();
+        JS::js+=");\n";
+    }};
 
 #endif //VARIABLE_H
