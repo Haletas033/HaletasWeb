@@ -42,7 +42,34 @@ inline void t() {
     std::cout << JS::js;
 }
 
+inline void test1() { //Should succeed
+    //Test of calling function of variable
+    std::cout << "Test 1" << '\n';
+    Variable foo(LET, "foo"); foo = JSObject("module");
+    Variable bar(LET, "bar"); foo = "Hello, World";
+    foo("func", 1.2, "test", 15, std::vector{1,2,3,4,5,6,7,8,9,10}, bar);
 
+    std::cout << JS::js;
+}
+
+inline void test2() { //Should fail because it is called before const bar is defined
+    //Test of calling function of variable
+    std::cout << "Test 2" << '\n';
+    Variable foo(LET, "foo"); foo = JSObject("module");
+    Variable bar(CONSTANT, "bar");
+    foo("func", 1.2, "test", 15, std::vector{1,2,3,4,5,6,7,8,9,10});
+
+    std::cout << JS::js;
+}
+
+inline void test() { //Should fail because the function name into a string type
+    //Test of calling function of variable
+    Variable foo(LET, "foo"); foo = JSObject("module");
+    Variable bar(LET, "bar"); foo = "Hello, World";
+    foo(123, 1.2, "test", 15, std::vector{1,2,3,4,5,6,7,8,9,10});
+
+    std::cout << JS::js;
+}
 
 
 

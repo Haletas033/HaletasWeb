@@ -258,12 +258,14 @@ public:
     //Use () to call functions of variables because . is not overloadable
     template <typename V, typename... Args>
     void operator()(V object, Args&&... args) {
-        if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
-            throw std::logic_error(std::string("Tried to call function \"") + object + "\" on \"" + this->name + "\" before initialization of a const variable");
+        if (expectedNextInitialized != nullptr && nextInitializedIsRequired) {
+            if constexpr (std::is_convertible_v<V, std::string>)
+                throw std::logic_error(std::string("Tried to call function \"") + object + "\" on \"" + this->name + "\" before initialization of a const variable");
+            throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
+        }
 
-        //Only support string types for now because there isn't a module class
         if constexpr (std::is_convertible_v<V, std::string>) JS::js+=this->name + "." + object + "(";
-        else throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
+            throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
 
         //Add arguments
         auto functionArgs = std::forward_as_tuple(std::forward<Args>(args)...);
