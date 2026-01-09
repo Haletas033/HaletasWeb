@@ -265,7 +265,7 @@ public:
         }
 
         if constexpr (std::is_convertible_v<V, std::string>) JS::js+=this->name + "." + object + "(";
-            throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
+        else throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
 
         //Add arguments
         auto functionArgs = std::forward_as_tuple(std::forward<Args>(args)...);

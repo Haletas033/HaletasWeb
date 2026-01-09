@@ -41,8 +41,3 @@ inline void t() {
 
     std::cout << JS::js;
 }
-
-
-
-
-
