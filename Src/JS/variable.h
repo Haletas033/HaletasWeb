@@ -14,6 +14,20 @@
 #include <ostream>
 #include <vector>
 #include "jsCore.h"
+struct JSObject;
+template <typename T>
+class Variable;
+
+template <typename V>
+std::string arithmeticBase(const std::string& lvalue, V rvalue, const char op) {
+    std::string arithmetic;
+    const std::string operand = std::string(" ") + op + " ";
+
+    if constexpr (std::is_same_v<std::decay_t<V>, JSObject>) arithmetic = lvalue + operand + std::string(rvalue);
+    else if constexpr (std::is_convertible_v<std::decay_t<V>, std::string>) arithmetic = lvalue + operand + "\"" + std::string(rvalue) + "\"";
+    else arithmetic = lvalue + operand + std::to_string(rvalue);
+    return arithmetic;
+}
 
 //Used when you need to reference a variable or something from a js file
 struct JSObject {
@@ -21,6 +35,49 @@ struct JSObject {
     explicit JSObject(std::string obj) : object(std::move(obj)) {}
     operator std::string() const { return object;}
 
+    //Add
+    template <typename V>
+    JSObject operator+(V object) {
+        return JSObject(arithmeticBase(this->object, object, '+'));
+    }
+    template <typename V>
+    JSObject operator+(Variable<V> &object) {
+        const std::string add = this->object + " + " + object.getName();
+        return JSObject(add);
+    }
+
+    //Subtract
+    template <typename V>
+    JSObject operator-(V object) {
+        return JSObject(arithmeticBase(this->object, object, '-'));
+    }
+    template <typename V>
+    JSObject operator-(Variable<V> &object) {
+        const std::string minus = this->object + " - " + object.getName();
+        return JSObject(minus);
+    }
+
+    //Multiply
+    template <typename V>
+    JSObject operator*(V object) {
+        return JSObject(arithmeticBase(this->object, object, '*'));
+    }
+    template <typename V>
+    JSObject operator*(Variable<V> &object) {
+        const std::string multiply = this->object + " * " + object.getName();
+        return JSObject(multiply);
+    }
+
+    //Divide
+    template <typename V>
+    JSObject operator/(V object) {
+        return JSObject(arithmeticBase(this->object, object, '/'));
+    }
+    template <typename V>
+    JSObject operator/(Variable<V> &object) {
+        const std::string divide = this->object + " / " + object.getName();
+        return JSObject(divide);
+    }
 };
 
 enum VarType {
@@ -188,58 +245,54 @@ public:
 
     //Add
     template <typename V>
-    void operator+(V object) {
+    JSObject operator+(V object) {
         IsLegalLiteral<V>();
-        const std::string add = this->name + " + " + std::to_string(object) + ";\n";
-        JS::js+=add;
+        return JSObject(arithmeticBase(this->name, object, '+'));
     }
     template <typename V>
-    void operator+(Variable<V> &object) {
+    JSObject operator+(Variable<V> &object) {
         IsLegalVariable(object);
-        const std::string add = this->name + " + " + object.getName() + ";\n";
-        JS::js+=add;
+        const std::string add = this->name + " + " + object.getName();
+        return JSObject(add);
     }
 
     //Subtract
     template <typename V>
-    void operator-(V object) {
+    JSObject operator-(V object) {
         IsLegalLiteral<V>();
-        const std::string minus = this->name + " - " + std::to_string(object) + ";\n";
-        JS::js+=minus;
+        return JSObject(arithmeticBase(this->name, object, '-'));
     }
     template <typename V>
-    void operator-(Variable<V> &object) {
+    JSObject operator-(Variable<V> &object) {
         IsLegalVariable(object);
-        const std::string minus = this->name + " - " + object.getName() + ";\n";
-        JS::js+=minus;
+        const std::string minus = this->name + " - " + object.getName();
+        return JSObject(minus);
     }
 
     //Multiply
     template <typename V>
-    void operator*(V object) {
+    JSObject operator*(V object) {
         IsLegalLiteral<V>();
-        const std::string multiply = this->name + " * " + std::to_string(object) + ";\n";
-        JS::js+=multiply;
+        return JSObject(arithmeticBase(this->name, object, '*'));
     }
     template <typename V>
-    void operator*(Variable<V> &object) {
+    JSObject operator*(Variable<V> &object) {
         IsLegalVariable(object);
-        const std::string multiply = this->name + " * " + object.getName() + ";\n";
-        JS::js+=multiply;
+        const std::string multiply = this->name + " * " + object.getName();
+        return JSObject(multiply);
     }
 
     //Divide
     template <typename V>
-    void operator/(V object) {
+    JSObject operator/(V object) {
         IsLegalLiteral<V>();
-        const std::string divide = this->name + " / " + std::to_string(object) + ";\n";
-        JS::js+=divide;
+        return JSObject(arithmeticBase(this->name, object, '/'));
     }
     template <typename V>
-    void operator/(Variable<V> &object) {
+    JSObject operator/(Variable<V> &object) {
         IsLegalVariable(object);
-        const std::string divide = this->name + " / " + object.getName() + ";\n";
-        JS::js+=divide;
+        const std::string divide = this->name + " / " + object.getName();
+        return JSObject(divide);
     }
 
     template <typename V>
