@@ -329,7 +329,7 @@ public:
         }, std::forward_as_tuple(std::forward<Args>(args)...));
 
         //Close function
-        JS::js.pop_back();
+        if (sizeof...(Args)) JS::js.pop_back(); //Only pop_back if there are arguments
         JS::js+=");\n";
     }};
 
