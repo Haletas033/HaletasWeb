@@ -10,9 +10,11 @@
 
 #include "../JS/js.h"
 
-#define test skillBallPit
 
-inline void test() {
+//fix ( being deleted
+//support foo=foo+foo.ar()
+
+inline void skillBallPit() {
     Console::Log("Hello, World");
 
     Variable Engine(CONSTANT, "Engine");                   Engine = JSObject("Matter.Engine");
@@ -31,7 +33,7 @@ inline void test() {
     Variable foo(LET, "foo"); foo = 10;
     Variable bar(LET, "bar"); bar = 20;
 
-    foo=foo+bar/"eeee";
+    bar("foo");
 
     Variable<std::vector<std::string>> skills(CONSTANT, "skills"); skills = std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"};
 
