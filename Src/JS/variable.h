@@ -14,16 +14,93 @@
 #include <ostream>
 #include <vector>
 #include "jsCore.h"
+struct CallResult;
 struct JSObject;
 template <typename T>
 class Variable;
 
+inline thread_local int callDepth = 0;
+
+//Struct made to decide whether to add something to JS::js or not.
+struct CallResult {
+    std::string js;
+    bool used = false;
+    bool isRoot = false;
+
+    explicit CallResult(std::string s) : js(std::move(s)) {
+        if (callDepth == 0) isRoot = true;
+        ++callDepth;
+    }
+
+    CallResult(CallResult&& other) noexcept
+        : js(std::move(other.js)), used(other.used), isRoot(other.isRoot)
+    {
+        other.used = true;
+        ++callDepth;
+    }
+
+    ~CallResult() {
+        --callDepth;
+        if (isRoot && !used) JS::js += js + ";\n";
+    }
+
+    const std::string& use() {
+        used = true;
+        return js;
+    }
+
+    //Add
+    template <typename V>
+    CallResult operator+(V&& object) {
+        return CallResult(arithmeticBase(this->js, object, '+'));
+    }
+    template <typename V>
+    CallResult operator+(Variable<V> &object) {
+        const std::string add = this->js + " + " + object.getName();
+        return CallResult(add);
+    }
+
+    //Subtract
+    template <typename V>
+    CallResult operator-(V&& object) {
+        return CallResult(arithmeticBase(this->js, object, '-'));
+    }
+    template <typename V>
+    CallResult operator-(Variable<V> &object) {
+        const std::string minus = this->js + " - " + object.getName();
+        return CallResult(minus);
+    }
+
+    //Multiply
+    template <typename V>
+    CallResult operator*(V&& object) {
+        return CallResult(arithmeticBase(this->js, object, '*'));
+    }
+    template <typename V>
+    CallResult operator*(Variable<V> &object) {
+        const std::string multiply = this->js + " * " + object.getName();
+        return CallResult(multiply);
+    }
+
+    //Divide
+    template <typename V>
+    CallResult operator/(V&& object) {
+        return CallResult(arithmeticBase(this->js, object, '/'));
+    }
+    template <typename V>
+    CallResult operator/(Variable<V> &object) {
+        const std::string divide = this->js + " / " + object.getName();
+        return CallResult(divide);
+    }
+};
+
 template <typename V>
-std::string arithmeticBase(const std::string& lvalue, V rvalue, const char op) {
+std::string arithmeticBase(const std::string& lvalue, V&& rvalue, const char op) {
     std::string arithmetic;
     const std::string operand = std::string(" ") + op + " ";
 
-    if constexpr (std::is_same_v<std::decay_t<V>, JSObject>) arithmetic = lvalue + operand + std::string(rvalue);
+    if constexpr (std::is_same_v<std::decay_t<V>, CallResult>) arithmetic = lvalue + operand + rvalue.use();
+    else if constexpr (std::is_same_v<std::decay_t<V>, JSObject>) arithmetic = lvalue + operand + std::string(rvalue);
     else if constexpr (std::is_convertible_v<std::decay_t<V>, std::string>) arithmetic = lvalue + operand + "\"" + std::string(rvalue) + "\"";
     else arithmetic = lvalue + operand + std::to_string(rvalue);
     return arithmetic;
@@ -34,50 +111,6 @@ struct JSObject {
     std::string object;
     explicit JSObject(std::string obj) : object(std::move(obj)) {}
     operator std::string() const { return object;}
-
-    //Add
-    template <typename V>
-    JSObject operator+(V object) {
-        return JSObject(arithmeticBase(this->object, object, '+'));
-    }
-    template <typename V>
-    JSObject operator+(Variable<V> &object) {
-        const std::string add = this->object + " + " + object.getName();
-        return JSObject(add);
-    }
-
-    //Subtract
-    template <typename V>
-    JSObject operator-(V object) {
-        return JSObject(arithmeticBase(this->object, object, '-'));
-    }
-    template <typename V>
-    JSObject operator-(Variable<V> &object) {
-        const std::string minus = this->object + " - " + object.getName();
-        return JSObject(minus);
-    }
-
-    //Multiply
-    template <typename V>
-    JSObject operator*(V object) {
-        return JSObject(arithmeticBase(this->object, object, '*'));
-    }
-    template <typename V>
-    JSObject operator*(Variable<V> &object) {
-        const std::string multiply = this->object + " * " + object.getName();
-        return JSObject(multiply);
-    }
-
-    //Divide
-    template <typename V>
-    JSObject operator/(V object) {
-        return JSObject(arithmeticBase(this->object, object, '/'));
-    }
-    template <typename V>
-    JSObject operator/(Variable<V> &object) {
-        const std::string divide = this->object + " / " + object.getName();
-        return JSObject(divide);
-    }
 };
 
 enum VarType {
@@ -160,14 +193,15 @@ public:
     }
 
     template <typename V>
-    Variable& operator=(V object) {
+    Variable& operator=(V&& object) {
         if (type != CONSTANT || !isInitialized()) {
             if (staticallyTyped) {
                 if constexpr (!std::is_convertible_v<V, T>)
                     throw std::logic_error(std::string("Expected type ") + staticType.name() + " got " + typeid(V).name() + " instead.");
             }
             std::string assign;
-            if constexpr (!std::is_convertible_v<V, std::string> && !is_vector<V>::value) assign = " = " + std::to_string(object);
+            if constexpr (std::is_same_v<std::decay_t<V>, CallResult>) assign = " = " + object.use();
+            else if constexpr (!std::is_convertible_v<V, std::string> && !is_vector<V>::value) assign = " = " + std::to_string(object);
             else if constexpr (is_vector<V>::value) assign = " = " + ArrayToString(object);
             else if constexpr (std::is_same_v<V, JSObject>) assign = " = " + std::string(object);
             else assign = " = \"" + std::string(object) + "\"";
@@ -236,7 +270,7 @@ private:
             throw std::logic_error(std::string("Can't do arithmetic on uninitialized variable"));
         if (this != expectedNextInitialized && nextInitializedIsRequired)
             throw std::logic_error(std::string("Tried to do arithmetic before initialization of a const variable"));
-        if (this->staticType != other.staticType) {
+        if (this->staticType != other.staticType && this->staticType != typeid(CallResult)) {
             throw std::logic_error(std::string("Tried to do arithmetic on ") + staticType.name() + " and " + other.staticType.name());
         }
     }
@@ -245,92 +279,94 @@ public:
 
     //Add
     template <typename V>
-    JSObject operator+(V object) {
+    CallResult operator+(V&& object) {
         IsLegalLiteral<V>();
-        return JSObject(arithmeticBase(this->name, object, '+'));
+        return CallResult(arithmeticBase(this->name, object, '+'));
     }
     template <typename V>
-    JSObject operator+(Variable<V> &object) {
+    CallResult operator+(Variable<V> &object) {
         IsLegalVariable(object);
         const std::string add = this->name + " + " + object.getName();
-        return JSObject(add);
+        return CallResult(add);
     }
 
     //Subtract
     template <typename V>
-    JSObject operator-(V object) {
+    CallResult operator-(V&& object) {
         IsLegalLiteral<V>();
-        return JSObject(arithmeticBase(this->name, object, '-'));
+        return CallResult(arithmeticBase(this->name, object, '-'));
     }
     template <typename V>
-    JSObject operator-(Variable<V> &object) {
+    CallResult operator-(Variable<V> &object) {
         IsLegalVariable(object);
         const std::string minus = this->name + " - " + object.getName();
-        return JSObject(minus);
+        return CallResult(minus);
     }
 
     //Multiply
     template <typename V>
-    JSObject operator*(V object) {
+    CallResult operator*(V&& object) {
         IsLegalLiteral<V>();
-        return JSObject(arithmeticBase(this->name, object, '*'));
+        return CallResult(arithmeticBase(this->name, object, '*'));
     }
     template <typename V>
-    JSObject operator*(Variable<V> &object) {
+    CallResult operator*(Variable<V> &object) {
         IsLegalVariable(object);
         const std::string multiply = this->name + " * " + object.getName();
-        return JSObject(multiply);
+        return CallResult(multiply);
     }
 
     //Divide
     template <typename V>
-    JSObject operator/(V object) {
+    CallResult operator/(V&& object) {
         IsLegalLiteral<V>();
-        return JSObject(arithmeticBase(this->name, object, '/'));
+        return CallResult(arithmeticBase(this->name, object, '/'));
     }
     template <typename V>
-    JSObject operator/(Variable<V> &object) {
+    CallResult operator/(Variable<V> &object) {
         IsLegalVariable(object);
         const std::string divide = this->name + " / " + object.getName();
-        return JSObject(divide);
+        return CallResult(divide);
     }
 
     template <typename V>
-    void AddArg(V&& arg) {
-        if constexpr (is_vector<std::decay_t<V>>::value) JS::js+=ArrayToString(arg) + ",";
-        else if constexpr (std::is_same_v<std::decay_t<decltype(arg)>, JSObject>) JS::js+=std::string(arg) + ",";
-        else if constexpr (std::is_convertible_v<decltype(arg), std::string>) JS::js+=std::string("\"") + arg + "\"" + ",";
-        else JS::js+=std::to_string(arg) + ",";
+    std::string AddArg(V&& arg) {
+        if constexpr (is_vector<std::decay_t<V>>::value) return ArrayToString(arg) + ",";
+        else if constexpr (std::is_same_v<std::decay_t<decltype(arg)>, JSObject>) return std::string(arg) + ",";
+        else if constexpr (std::is_convertible_v<decltype(arg), std::string>) return std::string("\"") + arg + "\"" + ",";
+        else return std::to_string(arg) + ",";
     }
 
     template <typename V>
-    static void AddArg(Variable<V>& arg) {
-        JS::js+=arg.getName() + std::string(",");
+    static std::string AddArg(Variable<V>& arg) {
+        return arg.getName() + std::string(",");
     }
 
     //Use () to call functions of variables because . is not overloadable
     template <typename V, typename... Args>
-    void operator()(V object, Args&&... args) {
+    CallResult operator()(V object, Args&&... args) {
+        std::string result;
+
         if (expectedNextInitialized != nullptr && nextInitializedIsRequired) {
             if constexpr (std::is_convertible_v<V, std::string>)
                 throw std::logic_error(std::string("Tried to call function \"") + object + "\" on \"" + this->name + "\" before initialization of a const variable");
             throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
         }
 
-        if constexpr (std::is_convertible_v<V, std::string>) JS::js+=this->name + "." + object + "(";
+        if constexpr (std::is_convertible_v<V, std::string>) result+=this->name + "." + object + "(";
         else throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
 
         //Add arguments
         auto functionArgs = std::forward_as_tuple(std::forward<Args>(args)...);
         std::apply([&](auto&&... arg){
             (([&]{
-                AddArg(arg);
+                result+=AddArg(arg);
             }()), ...);
         }, std::forward_as_tuple(std::forward<Args>(args)...));
 
         //Close function
-        if (sizeof...(Args)) JS::js.pop_back(); //Only pop_back if there are arguments
-        JS::js+=");\n";
+        if (sizeof...(Args)) result.pop_back(); //Only pop_back if there are arguments
+        return CallResult(result + ')');
     }};
 
 #endif //VARIABLE_H

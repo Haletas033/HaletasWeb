@@ -33,7 +33,11 @@ inline void skillBallPit() {
     Variable foo(LET, "foo"); foo = 10;
     Variable bar(LET, "bar"); bar = 20;
 
+    foo = bar("foo");
     bar("foo");
+
+    foo + 1;
+    foo = foo + bar / 12 + bar + bar("foo") + JSObject("egg");
 
     Variable<std::vector<std::string>> skills(CONSTANT, "skills"); skills = std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"};
 
