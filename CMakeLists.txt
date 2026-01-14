@@ -15,6 +15,7 @@ add_executable(HaletasWeb Src/Main.cpp
         Src/JS/variable.h
         Src/JS/js.h
         Src/JS/console.h
+        Src/JS/function.h
 )
 
 add_subdirectory(external/cmark-0.31.1)

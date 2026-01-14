@@ -11,8 +11,10 @@
 #include "../JS/js.h"
 
 
-//fix ( being deleted
-//support foo=foo+foo.ar()
+//Add functions
+class add : public Function {
+
+};
 
 inline void skillBallPit() {
     Console::Log("Hello, World");

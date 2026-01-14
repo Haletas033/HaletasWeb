@@ -21,7 +21,7 @@ class Variable;
 
 inline thread_local int callDepth = 0;
 
-//Struct made to decide whether to add something to JS::js or not.
+//Struct made to decide whether to add something to *JS::currJs or not.
 struct CallResult {
     std::string js;
     bool used = false;
@@ -41,7 +41,7 @@ struct CallResult {
 
     ~CallResult() {
         --callDepth;
-        if (isRoot && !used) JS::js += js + ";\n";
+        if (isRoot && !used) *JS::currJs += js + ";\n";
     }
 
     const std::string& use() {
@@ -149,9 +149,9 @@ public:
         std::enable_if_t<std::is_same_v<U, void>, int> = 0)
             : type(t), name(std::move(n))
     {
-        if (this == expectedNextInitialized) JS::js+=";\n";
+        if (this == expectedNextInitialized) *JS::currJs+=";\n";
         const std::string variable = VarTypeToString[t] + " " + name;
-        JS::js += variable;
+        *JS::currJs += variable;
         expectedNextInitialized = static_cast<void*>(this);
         nextInitializedIsRequired = type == CONSTANT;
     }
@@ -162,11 +162,11 @@ public:
         std::enable_if_t<!std::is_same_v<U, void>, int> = 0)
             : type(t), staticType(typeid(T)), staticallyTyped(true), name(std::move(n))
     {
-        if (!nextInitializedIsRequired) JS::js+=";\n";
+        if (!nextInitializedIsRequired) *JS::currJs+=";\n";
         else throw std::logic_error("Const variable wasn't initialized");
 
         const std::string variable = VarTypeToString[t] + " " + name;
-        JS::js += variable;
+        *JS::currJs += variable;
         expectedNextInitialized = static_cast<void*>(this);
         nextInitializedIsRequired = type == CONSTANT;
     }
@@ -206,10 +206,10 @@ public:
             else if constexpr (std::is_same_v<V, JSObject>) assign = " = " + std::string(object);
             else assign = " = \"" + std::string(object) + "\"";
 
-            if (!expectedNextInitialized) JS::js+=this->name;
+            if (!expectedNextInitialized) *JS::currJs+=this->name;
 
-            JS::js+=assign;
-            if (this == expectedNextInitialized || !nextInitializedIsRequired) JS::js+=";\n";
+            *JS::currJs+=assign;
+            if (this == expectedNextInitialized || !nextInitializedIsRequired) *JS::currJs+=";\n";
             else throw std::logic_error("Variable initialized before uninitialized const variable");
 
             initialized = true;
@@ -233,10 +233,10 @@ public:
             }
             const std::string assign = " = " + object.getName();
 
-            if (!expectedNextInitialized) JS::js+=this->name;
+            if (!expectedNextInitialized) *JS::currJs+=this->name;
 
-            JS::js+=assign;
-            if (this == expectedNextInitialized || !nextInitializedIsRequired) JS::js+=";\n";
+            *JS::currJs+=assign;
+            if (this == expectedNextInitialized || !nextInitializedIsRequired) *JS::currJs+=";\n";
             else throw std::logic_error("Variable initialized before uninitialized const variable");
 
             initialized = true;

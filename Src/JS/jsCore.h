@@ -16,7 +16,9 @@
 #include <vector>
 
 class JS {
-public: inline static std::string js;
+public:
+    inline static std::string js;
+    inline static std::string* currJs = &js;
 };
 
 #endif //JS_CORE_H

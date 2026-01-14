@@ -9,5 +9,6 @@
 #include "jsCore.h"
 #include "variable.h"
 #include "console.h"
+#include "function.h"
 
 #endif //JS_H

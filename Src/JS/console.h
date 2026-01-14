@@ -19,10 +19,10 @@ private:
         if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
             throw std::logic_error("Tried to call " + consoleFuncName + " before initialization of a const variable.");
 
-        if constexpr (is_vector<T>::value) JS::js+=consoleFuncName + "(" + Variable<>::ArrayToString(object) + ");\n";
-        else if constexpr (!std::is_convertible_v<T, std::string>) JS::js+=std::string(consoleFuncName + "(") + std::to_string(object) + ");\n";
-        else if constexpr (std::is_same_v<T, JSObject>) JS::js+=std::string(consoleFuncName + "(") + std::string(object) + ");\n";
-        else JS::js+=std::string(consoleFuncName + "(\"") + object + "\");\n";
+        if constexpr (is_vector<T>::value) *JS::currJs+=consoleFuncName + "(" + Variable<>::ArrayToString(object) + ");\n";
+        else if constexpr (!std::is_convertible_v<T, std::string>) *JS::currJs+=std::string(consoleFuncName + "(") + std::to_string(object) + ");\n";
+        else if constexpr (std::is_same_v<T, JSObject>) *JS::currJs+=std::string(consoleFuncName + "(") + std::string(object) + ");\n";
+        else *JS::currJs+=std::string(consoleFuncName + "(\"") + object + "\");\n";
     }
 
     //For variables
@@ -33,7 +33,7 @@ private:
         if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
             throw std::logic_error("Tried to call " + consoleFuncName + " before initialization of a const variable.");
 
-        JS::js+=consoleFuncName + "(" + object.getName() + ");\n";
+        *JS::currJs+=consoleFuncName + "(" + object.getName() + ");\n";
     }
 
 public:
