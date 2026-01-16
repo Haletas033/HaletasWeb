@@ -12,11 +12,21 @@
 
 
 //Add functions
-class add : public Function {
+inline void sayHello() {
+    std::string temp;
+    JS::currJs = &temp;
 
-};
+    Variable<int> a(LET, "a"); a.asArg();
+    Variable<int> b(LET, "b"); b.asArg();
 
+    Function::Func("sayHello", a, b);
+        Console::Log(a+b);
+    Function::EndFunc();
+}
 inline void skillBallPit() {
+    //function declarations
+    sayHello();
+
     Console::Log("Hello, World");
 
     Variable Engine(CONSTANT, "Engine");                   Engine = JSObject("Matter.Engine");
@@ -47,5 +57,6 @@ inline void skillBallPit() {
 
     foo("bar", 2.5, "China", bar, JSObject("JSThing"), std::vector{1,2,3,4,5,6,7,8,9,10});
 
+    std::cout << Function::funcJs;
     std::cout << JS::js;
 }

@@ -135,6 +135,13 @@ struct is_vector : std::false_type {};
 template<typename T, typename Alloc>
 struct is_vector<std::vector<T, Alloc>> : std::true_type {};
 
+template <typename T>
+struct is_variable : std::false_type {};
+
+template <typename U>
+struct is_variable<Variable<U>> : std::true_type {};
+
+
 template <typename T = void>
 class Variable {
     const VarType type;
@@ -142,6 +149,7 @@ class Variable {
     const bool staticallyTyped = false;
     const std::string name;
     bool initialized = false;
+    bool isArg = false;
 public:
     //For dynamic types
     template <typename U = T>
@@ -177,6 +185,11 @@ public:
 
     [[nodiscard]] std::string getName() const {
         return name;
+    }
+
+    Variable asArg() {
+        this->isArg = true;
+        return *this;
     }
 
     template <typename V>
@@ -258,18 +271,22 @@ private:
     void IsLegalLiteral() const {
         if constexpr (!std::is_convertible_v<V, T> && !std::is_same_v<T, void> && !std::is_same_v<V, void>)
             throw std::logic_error(std::string("Can't do arithmetic on ") + typeid(T).name() + " and " + typeid(V).name());
-        else if (!this->initialized)
-            throw std::logic_error(std::string("Can't do arithmetic on uninitialized variable"));
-        else if (this != expectedNextInitialized && nextInitializedIsRequired)
-            throw std::logic_error(std::string("Tried to do arithmetic before initialization of a const variable"));
+        if (!this->isArg) {
+            if (!this->initialized)
+                throw std::logic_error(std::string("Can't do arithmetic on uninitialized variable"));
+            if (this != expectedNextInitialized && nextInitializedIsRequired)
+                throw std::logic_error(std::string("Tried to do arithmetic before initialization of a const variable"));
+        }
 
     }
 
     void IsLegalVariable(Variable& other) const {
-        if (!this->initialized)
-            throw std::logic_error(std::string("Can't do arithmetic on uninitialized variable"));
-        if (this != expectedNextInitialized && nextInitializedIsRequired)
-            throw std::logic_error(std::string("Tried to do arithmetic before initialization of a const variable"));
+        if (!other.isArg || !this->isArg) {
+            if (!this->initialized)
+                throw std::logic_error(std::string("Can't do arithmetic on uninitialized variable"));
+            if (this != expectedNextInitialized && nextInitializedIsRequired)
+                throw std::logic_error(std::string("Tried to do arithmetic before initialization of a const variable"));
+        }
         if (this->staticType != other.staticType && this->staticType != typeid(CallResult)) {
             throw std::logic_error(std::string("Tried to do arithmetic on ") + staticType.name() + " and " + other.staticType.name());
         }
@@ -330,7 +347,7 @@ public:
     }
 
     template <typename V>
-    std::string AddArg(V&& arg) {
+    static std::string AddArg(V&& arg) {
         if constexpr (is_vector<std::decay_t<V>>::value) return ArrayToString(arg) + ",";
         else if constexpr (std::is_same_v<std::decay_t<decltype(arg)>, JSObject>) return std::string(arg) + ",";
         else if constexpr (std::is_convertible_v<decltype(arg), std::string>) return std::string("\"") + arg + "\"" + ",";
