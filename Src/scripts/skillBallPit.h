@@ -12,20 +12,20 @@
 
 
 //Add functions
-inline void sayHello() {
+inline void Add() {
     std::string temp;
     JS::currJs = &temp;
 
     Variable<int> a(LET, "a"); a.asArg();
     Variable<int> b(LET, "b"); b.asArg();
 
-    Function::Func("sayHello", a, b);
-        Console::Log(a+b);
+    Function::Func("Add", a, b);
+        Function::Return(a+b);
     Function::EndFunc();
 }
 inline void skillBallPit() {
     //function declarations
-    sayHello();
+    Add();
 
     Console::Log("Hello, World");
 

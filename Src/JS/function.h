@@ -31,7 +31,39 @@ public:
         funcJs+=result + "){\n";
     }
 
-    void Return(); //not implemented
+    //For void
+    static void Return() {
+        *JS::currJs += "return;\n";
+    }
+
+    //For literals
+    template <typename T>
+    static void Return(T&& object) {
+        std::string returnStr = "return ";
+
+        if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
+            throw std::logic_error("Tried to return before initialization of a const variable.");
+
+        if constexpr (is_vector<std::decay_t<T>>::value) returnStr+= Variable<>::ArrayToString(object) + ";\n";
+        else if constexpr (std::is_same_v<std::decay_t<T>, CallResult>) returnStr+= object.use() + ";\n";
+        else if constexpr (!std::is_convertible_v<std::decay_t<T>, std::string>) returnStr+= std::to_string(object) + ";\n";
+        else if constexpr (std::is_same_v<std::decay_t<T>, JSObject>) returnStr+= std::string(object) + ";\n";
+        else returnStr+= object + ";\n";
+
+        *JS::currJs += returnStr;
+    }
+
+    //For variables
+    template <typename T>
+    static void ConsoleBase(Variable<T> &object, const std::string& funcName) {
+        const std::string returnStr = "return " + object.getName() + ";\n";
+
+        if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
+            throw std::logic_error("Tried to call return before initialization of a const variable.");
+
+        *JS::currJs+=returnStr;
+    }
+
     static void EndFunc() {
         funcJs+="}\n";
         JS::currJs = &JS::js;

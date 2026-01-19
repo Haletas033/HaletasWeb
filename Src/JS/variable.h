@@ -21,6 +21,18 @@ class Variable;
 
 inline thread_local int callDepth = 0;
 
+template <typename V>
+std::string arithmeticBase(const std::string& lvalue, V&& rvalue, const char op) {
+    std::string arithmetic;
+    const std::string operand = std::string(" ") + op + " ";
+
+    if constexpr (std::is_same_v<std::decay_t<V>, CallResult>) arithmetic = lvalue + operand + rvalue.use();
+    else if constexpr (std::is_same_v<std::decay_t<V>, JSObject>) arithmetic = lvalue + operand + std::string(rvalue);
+    else if constexpr (std::is_convertible_v<std::decay_t<V>, std::string>) arithmetic = lvalue + operand + "\"" + std::string(rvalue) + "\"";
+    else arithmetic = lvalue + operand + std::to_string(rvalue);
+    return arithmetic;
+}
+
 //Struct made to decide whether to add something to *JS::currJs or not.
 struct CallResult {
     std::string js;
@@ -52,59 +64,47 @@ struct CallResult {
     //Add
     template <typename V>
     CallResult operator+(V&& object) {
-        return CallResult(arithmeticBase(this->js, object, '+'));
+        return CallResult(arithmeticBase(use(), object, '+'));
     }
     template <typename V>
     CallResult operator+(Variable<V> &object) {
-        const std::string add = this->js + " + " + object.getName();
+        const std::string add = use() + " + " + object.getName();
         return CallResult(add);
     }
 
     //Subtract
     template <typename V>
     CallResult operator-(V&& object) {
-        return CallResult(arithmeticBase(this->js, object, '-'));
+        return CallResult(arithmeticBase(use(), object, '-'));
     }
     template <typename V>
     CallResult operator-(Variable<V> &object) {
-        const std::string minus = this->js + " - " + object.getName();
+        const std::string minus = use() + " - " + object.getName();
         return CallResult(minus);
     }
 
     //Multiply
     template <typename V>
     CallResult operator*(V&& object) {
-        return CallResult(arithmeticBase(this->js, object, '*'));
+        return CallResult(arithmeticBase(use(), object, '*'));
     }
     template <typename V>
     CallResult operator*(Variable<V> &object) {
-        const std::string multiply = this->js + " * " + object.getName();
+        const std::string multiply = use() + " * " + object.getName();
         return CallResult(multiply);
     }
 
     //Divide
     template <typename V>
     CallResult operator/(V&& object) {
-        return CallResult(arithmeticBase(this->js, object, '/'));
+        return CallResult(arithmeticBase(use(), object, '/'));
     }
     template <typename V>
     CallResult operator/(Variable<V> &object) {
-        const std::string divide = this->js + " / " + object.getName();
+        const std::string divide = use() + " / " + object.getName();
         return CallResult(divide);
     }
 };
-
-template <typename V>
-std::string arithmeticBase(const std::string& lvalue, V&& rvalue, const char op) {
-    std::string arithmetic;
-    const std::string operand = std::string(" ") + op + " ";
-
-    if constexpr (std::is_same_v<std::decay_t<V>, CallResult>) arithmetic = lvalue + operand + rvalue.use();
-    else if constexpr (std::is_same_v<std::decay_t<V>, JSObject>) arithmetic = lvalue + operand + std::string(rvalue);
-    else if constexpr (std::is_convertible_v<std::decay_t<V>, std::string>) arithmetic = lvalue + operand + "\"" + std::string(rvalue) + "\"";
-    else arithmetic = lvalue + operand + std::to_string(rvalue);
-    return arithmetic;
-}
 
 //Used when you need to reference a variable or something from a js file
 struct JSObject {
