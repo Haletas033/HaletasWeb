@@ -18,6 +18,7 @@
 class JS {
 public:
     inline static std::string js;
+
     inline static std::string* currJs = &js;
 };
 

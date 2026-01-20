@@ -16,8 +16,10 @@ inline void Add() {
     std::string temp;
     JS::currJs = &temp;
 
-    Variable<int> a(LET, "a"); a.asArg();
-    Variable<int> b(LET, "b"); b.asArg();
+    Function add{};
+
+    Variable<int> a(LET, "a"); a.asArg(add);
+    Variable<int> b(LET, "b"); b.asArg(add);
 
     Function::Func("Add", a, b);
         Function::Return(a+b);
@@ -56,6 +58,8 @@ inline void skillBallPit() {
     Console::Log(skills);
 
     foo("bar", 2.5, "China", bar, JSObject("JSThing"), std::vector{1,2,3,4,5,6,7,8,9,10});
+
+    Function::Call("Add", 2, 10);
 
     std::cout << Function::funcJs;
     std::cout << JS::js;

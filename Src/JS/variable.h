@@ -13,11 +13,13 @@
 #include <utility>
 #include <ostream>
 #include <vector>
+
 #include "jsCore.h"
 struct CallResult;
 struct JSObject;
 template <typename T>
 class Variable;
+class Function;
 
 inline thread_local int callDepth = 0;
 
@@ -187,7 +189,8 @@ public:
         return name;
     }
 
-    Variable asArg() {
+    Variable asArg(Function& func) {
+        func.argCount++;
         this->isArg = true;
         return *this;
     }

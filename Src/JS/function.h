@@ -10,6 +10,25 @@
 class Function {
 public:
     inline static std::string funcJs;
+    unsigned int argCount;
+
+    //Helper function
+    template <typename ...Args>
+    static std::string AddArgs(Args&&... args) {
+        std::string result;
+        auto functionArgs = std::forward_as_tuple(std::forward<Args>(args)...);
+        std::apply([&](auto&&... arg){
+            (([&]{
+                result+=Variable<>::AddArg(arg);
+            }()), ...);
+        }, std::forward_as_tuple(std::forward<Args>(args)...));
+
+        //Remove trailing comma
+        if (sizeof...(Args)) result.pop_back(); //Only pop_back if there are arguments
+
+        return result;
+    }
+
     template <typename ...Args>
     static void Func(const std::string& name, Args&&... args) {
         JS::currJs = &funcJs;
@@ -19,15 +38,9 @@ public:
             throw std::logic_error(std::string("Tried to declare function "+ name + "before the initialization of a const variable"));
 
         //Add arguments
-        auto functionArgs = std::forward_as_tuple(std::forward<Args>(args)...);
-        std::apply([&](auto&&... arg){
-            (([&]{
-                result+=Variable<>::AddArg(arg);
-            }()), ...);
-        }, std::forward_as_tuple(std::forward<Args>(args)...));
+        result+=AddArgs(args...);
 
         //Close function
-        if (sizeof...(Args)) result.pop_back(); //Only pop_back if there are arguments
         funcJs+=result + "){\n";
     }
 
@@ -55,7 +68,7 @@ public:
 
     //For variables
     template <typename T>
-    static void ConsoleBase(Variable<T> &object, const std::string& funcName) {
+    static void Return(Variable<T> &object) {
         const std::string returnStr = "return " + object.getName() + ";\n";
 
         if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
@@ -67,6 +80,11 @@ public:
     static void EndFunc() {
         funcJs+="}\n";
         JS::currJs = &JS::js;
+    }
+
+    template <typename ...Args>
+    static void Call(const std::string& name, Args&&...args) {
+        *JS::currJs += name + '(' + AddArgs(args...) + ");\n";
     }
 };
 
