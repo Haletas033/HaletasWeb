@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "matter": "^0.2.0",
+    "matter-js": "^0.20.0"
+  }
+}
