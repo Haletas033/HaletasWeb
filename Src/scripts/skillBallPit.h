@@ -26,7 +26,18 @@ inline void skillBallPit() {
     Variable<> Composites(CONSTANT, "Composites"); Composites = JSObject("Matter.Composites");
 
     Variable<> engine(LET, "engine"); engine = Engine("create");
-    Variable<> world(LET, "world"); world = engine["world"];
+    Variable<> world(LET, "world"); world = engine>>"world";
+
+    Variable<> renderOptions(LET, "renderOptions"); renderOptions = JSObject("new Object()");
+    renderOptions>>"width" = 800;
+    renderOptions>>"height" = 600;
+    renderOptions>>"showAngleIndicator" = false;
+    renderOptions>>"wireframes" = false;
+
+    Variable<> renderer (LET, "renderer"); renderer = JSObject("new Object()");
+    renderer>>"element" = JSObject("document.getElementById(\"skills\")");
+    renderer>>"engine" = engine;
+    renderer>>"options" = renderOptions;
 
     std::cout << JS::js;
 }

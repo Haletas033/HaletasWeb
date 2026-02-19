@@ -35,6 +35,18 @@ std::string arithmeticBase(const std::string& lvalue, V&& rvalue, const char op)
     return arithmetic;
 }
 
+template<typename T>
+struct is_vector : std::false_type {};
+
+template<typename T, typename Alloc>
+struct is_vector<std::vector<T, Alloc>> : std::true_type {};
+
+template <typename T>
+struct is_variable : std::false_type {};
+
+template <typename U>
+struct is_variable<Variable<U>> : std::true_type {};
+
 //Struct made to decide whether to add something to *JS::currJs or not.
 struct CallResult {
     std::string js;
@@ -106,6 +118,22 @@ struct CallResult {
         const std::string divide = use() + " / " + object.getName();
         return CallResult(divide);
     }
+
+    template <typename V>
+    CallResult &operator=(V&& object) {
+        //arithmeticBase works for =
+        std::string assign = arithmeticBase(use(), object, '=');
+
+        *JS::currJs += assign + ";\n";
+        return *this;
+    }
+    template <typename V>
+    CallResult &operator=(Variable<V> &object) {
+        const std::string assign = use() + " = " + object.getName();
+        *JS::currJs += assign + ";\n";
+        return *this;
+    }
+
 };
 
 //Used when you need to reference a variable or something from a js file
@@ -130,19 +158,6 @@ inline std::unordered_map<VarType, std::string> VarTypeToString = {
 inline void *expectedNextInitialized = nullptr;
 
 inline bool nextInitializedIsRequired = false;
-
-template<typename T>
-struct is_vector : std::false_type {};
-
-template<typename T, typename Alloc>
-struct is_vector<std::vector<T, Alloc>> : std::true_type {};
-
-template <typename T>
-struct is_variable : std::false_type {};
-
-template <typename U>
-struct is_variable<Variable<U>> : std::true_type {};
-
 
 template <typename T = void>
 class Variable {
@@ -364,7 +379,7 @@ public:
 
     //Use [] to call member variables because . is not overloadable
     template <typename V>
-    CallResult operator[](V object) {
+    CallResult operator>>(V object) {
         std::string result;
 
         if (expectedNextInitialized != nullptr && nextInitializedIsRequired) {
