@@ -362,6 +362,24 @@ public:
         return arg.getName() + std::string(",");
     }
 
+    //Use [] to call member variables because . is not overloadable
+    template <typename V>
+    CallResult operator[](V object) {
+        std::string result;
+
+        if (expectedNextInitialized != nullptr && nextInitializedIsRequired) {
+            if constexpr (std::is_convertible_v<V, std::string>)
+                throw std::logic_error(std::string("Tried to use .operator ([]) \"") + object + "\" on \"" + this->name + "\" before initialization of a const variable");
+            throw std::logic_error(std::string("Expected object name/string type got ") + typeid(V).name() + " instead.");
+        }
+
+        if constexpr (std::is_convertible_v<V, std::string>) result+=this->name + "." + object;
+        else throw std::logic_error(std::string("Expected object name/string type got ") + typeid(V).name() + " instead.");
+
+        //Close function
+        return CallResult(result);
+    }
+
     //Use () to call functions of variables because . is not overloadable
     template <typename V, typename... Args>
     CallResult operator()(V object, Args&&... args) {
@@ -387,6 +405,10 @@ public:
         //Close function
         if (sizeof...(Args)) result.pop_back(); //Only pop_back if there are arguments
         return CallResult(result + ')');
-    }};
+    }
+
+};
+
+
 
 #endif //VARIABLE_H

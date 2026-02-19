@@ -83,8 +83,8 @@ public:
     }
 
     template <typename ...Args>
-    static void Call(const std::string& name, Args&&...args) {
-        *JS::currJs += name + '(' + AddArgs(args...) + ");\n";
+    static CallResult Call(const std::string& name, Args&&...args) {
+        return CallResult(name + '(' + AddArgs(args...) + ")");
     }
 };
 
