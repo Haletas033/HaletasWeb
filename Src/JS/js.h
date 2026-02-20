@@ -10,5 +10,6 @@
 #include "variable.h"
 #include "console.h"
 #include "function.h"
+#include "conditionals.h"
 
 #endif //JS_H

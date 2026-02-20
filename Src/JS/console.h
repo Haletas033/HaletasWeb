@@ -6,6 +6,7 @@
 #define CONSOLE_H
 
 #include "jsCore.h"
+#include "typeTraits.h"
 #include "variable.h"
 
 class Console {

@@ -5,6 +5,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
+#include "typeTraits.h"
 #include "variable.h"
 
 class Function {
@@ -33,9 +34,6 @@ public:
     static void Func(const std::string& name, Args&&... args) {
         JS::currJs = &funcJs;
         std::string result = "function " + name + '(';
-
-        if (expectedNextInitialized != nullptr && nextInitializedIsRequired)
-            throw std::logic_error(std::string("Tried to declare function "+ name + "before the initialization of a const variable"));
 
         //Add arguments
         result+=AddArgs(args...);
@@ -86,6 +84,8 @@ public:
     static CallResult Call(const std::string& name, Args&&...args) {
         return CallResult(name + '(' + AddArgs(args...) + ")");
     }
+
+    static CallResult CallBack(const std::string& name) { return CallResult(name); }
 };
 
 #endif //FUNCTION_H

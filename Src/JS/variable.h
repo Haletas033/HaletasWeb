@@ -14,7 +14,11 @@
 #include <ostream>
 #include <vector>
 
+#include "conditionals.h"
+#include "typeTraits.h"
 #include "jsCore.h"
+
+
 struct CallResult;
 struct JSObject;
 template <typename T>
@@ -34,18 +38,6 @@ std::string arithmeticBase(const std::string& lvalue, V&& rvalue, const char op)
     else arithmetic = lvalue + operand + std::to_string(rvalue);
     return arithmetic;
 }
-
-template<typename T>
-struct is_vector : std::false_type {};
-
-template<typename T, typename Alloc>
-struct is_vector<std::vector<T, Alloc>> : std::true_type {};
-
-template <typename T>
-struct is_variable : std::false_type {};
-
-template <typename U>
-struct is_variable<Variable<U>> : std::true_type {};
 
 //Struct made to decide whether to add something to *JS::currJs or not.
 struct CallResult {
@@ -222,6 +214,18 @@ public:
 
         return  output + "]";
     }
+    //For variables
+    template <typename V>
+    static std::string ArrayToString(const std::vector<Variable<V>> &array) {
+        std::string output = "[";
+        for (auto var : array) {
+            output += var.getName() + ",";
+        }
+        //Remove extra comma
+        output.pop_back();
+
+        return  output + "]";
+    }
 
     template <typename V>
     Variable& operator=(V&& object) {
@@ -232,6 +236,7 @@ public:
             }
             std::string assign;
             if constexpr (std::is_same_v<std::decay_t<V>, CallResult>) assign = " = " + object.use();
+            else if constexpr (std::is_same_v<std::decay_t<V>, Conditional>) assign = " = " + object.js;
             else if constexpr (!std::is_convertible_v<V, std::string> && !is_vector<V>::value) assign = " = " + std::to_string(object);
             else if constexpr (is_vector<V>::value) assign = " = " + ArrayToString(object);
             else if constexpr (std::is_same_v<V, JSObject>) assign = " = " + std::string(object);
@@ -366,7 +371,8 @@ public:
 
     template <typename V>
     static std::string AddArg(V&& arg) {
-        if constexpr (is_vector<std::decay_t<V>>::value) return ArrayToString(arg) + ",";
+        if constexpr (std::is_same_v<std::decay_t<decltype(arg)>, CallResult>) return arg.use() + ",";
+        else if constexpr (is_vector<std::decay_t<V>>::value) return ArrayToString(arg) + ",";
         else if constexpr (std::is_same_v<std::decay_t<decltype(arg)>, JSObject>) return std::string(arg) + ",";
         else if constexpr (std::is_convertible_v<decltype(arg), std::string>) return std::string("\"") + arg + "\"" + ",";
         else return std::to_string(arg) + ",";
@@ -382,11 +388,8 @@ public:
     CallResult operator>>(V object) {
         std::string result;
 
-        if (expectedNextInitialized != nullptr && nextInitializedIsRequired) {
-            if constexpr (std::is_convertible_v<V, std::string>)
-                throw std::logic_error(std::string("Tried to use .operator ([]) \"") + object + "\" on \"" + this->name + "\" before initialization of a const variable");
-            throw std::logic_error(std::string("Expected object name/string type got ") + typeid(V).name() + " instead.");
-        }
+        if constexpr (!std::is_convertible_v<V, std::string>)
+            throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
 
         if constexpr (std::is_convertible_v<V, std::string>) result+=this->name + "." + object;
         else throw std::logic_error(std::string("Expected object name/string type got ") + typeid(V).name() + " instead.");
@@ -400,11 +403,9 @@ public:
     CallResult operator()(V object, Args&&... args) {
         std::string result;
 
-        if (expectedNextInitialized != nullptr && nextInitializedIsRequired) {
-            if constexpr (std::is_convertible_v<V, std::string>)
-                throw std::logic_error(std::string("Tried to call function \"") + object + "\" on \"" + this->name + "\" before initialization of a const variable");
+        if constexpr (!std::is_convertible_v<V, std::string>)
             throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
-        }
+
 
         if constexpr (std::is_convertible_v<V, std::string>) result+=this->name + "." + object + "(";
         else throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
@@ -422,8 +423,85 @@ public:
         return CallResult(result + ')');
     }
 
+    //Conditional operators
+
+    //Equivalent
+    template <typename V>
+    Conditional operator==(V object) const {
+        return LiteralConditionalBase(" === ", this->getName(), object);
+    }
+    template <typename V>
+    Conditional operator==(Variable<V> object) const {
+        return Conditional(this->getName() + " === " + object.getName());
+    }
+
+    //Not Equivalent
+    template <typename V>
+    Conditional operator!=(V object) const {
+        return LiteralConditionalBase(" !== ", this->getName(), object);
+    }
+    template <typename V>
+    Conditional operator!=(Variable<V> object) const {
+        return Conditional(this->getName() + " !== " + object.getName());
+    }
+
+    //And
+    template <typename V>
+    Conditional operator&&(V object) const {
+        return LiteralConditionalBase(" && ", this->getName(), object);
+    }
+    template <typename V>
+    Conditional operator&&(Variable<V> object) const {
+        return Conditional(this->getName() + " && " + object.getName());
+    }
+
+    //Or
+    template <typename V>
+    Conditional operator||(V object) const {
+        return LiteralConditionalBase(" || ", this->getName(), object);
+    }
+    template <typename V>
+    Conditional operator||(Variable<V> object) const {
+        return Conditional(this->getName() + " || " + object.getName());
+    }
+
+    //Less than
+    template <typename V>
+    Conditional operator>(V object) const {
+        return LiteralConditionalBase(" > ", this->getName(), object);
+    }
+    template <typename V>
+    Conditional operator>(Variable<V> object) const {
+        return Conditional(this->getName() + " > " + object.getName());
+    }
+
+    //Greater than
+    template <typename V>
+    Conditional operator<(V object) const {
+        return LiteralConditionalBase(" < ", this->getName(), object);
+    }
+    template <typename V>
+    Conditional operator<(Variable<V> object) const {
+        return Conditional(this->getName() + " < " + object.getName());
+    }
+
+    template <typename V>
+    Conditional operator>=(V object) const {
+        return LiteralConditionalBase(" >= ", this->getName(), object);
+    }
+    template <typename V>
+    Conditional operator>=(Variable<V> object) const {
+        return Conditional(this->getName() + " >= " + object.getName());
+    }
+
+    template <typename V>
+    Conditional operator<=(V object) const {
+        return LiteralConditionalBase(" <= ", this->getName(), object);
+    }
+    template <typename V>
+    Conditional operator<=(Variable<V> object) const {
+        return Conditional(this->getName() + " <= " + object.getName());
+    }
 };
-
-
 
 #endif //VARIABLE_H
