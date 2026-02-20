@@ -9,9 +9,24 @@
 #include "variable.h"
 
 class Function {
+private:
+    inline static std::vector<Function> functions;
+    inline static std::string temp; //Place to write arguments to
 public:
-    inline static std::string funcJs;
-    unsigned int argCount;
+    std::string funcJs;
+    unsigned int argCount = 0;
+
+    Function() {
+        JS::currJs = &temp;
+    }
+
+    static std::string GetFunctions() {
+        std::string result;
+        for (const Function& func : functions) {
+            result += func.funcJs;
+        }
+        return result;
+    }
 
     //Helper function
     template <typename ...Args>
@@ -31,7 +46,7 @@ public:
     }
 
     template <typename ...Args>
-    static void Func(const std::string& name, Args&&... args) {
+    void Func(const std::string& name, Args&&... args) {
         JS::currJs = &funcJs;
         std::string result = "function " + name + '(';
 
@@ -75,8 +90,9 @@ public:
         *JS::currJs+=returnStr;
     }
 
-    static void EndFunc() {
+    void EndFunc() {
         funcJs+="}\n";
+        functions.push_back(*this);
         JS::currJs = &JS::js;
     }
 

@@ -8,16 +8,15 @@
 
 #include "../JS/js.h"
 
+
+
 inline void OnStackCreateObject(Variable<>& Common, Variable<>& Bodies) {
     Function onStackCreateObject{};
-
-    std::string temp;
-    JS::currJs = &temp;
 
     Variable<> x(CONSTANT, "x"); x.asArg(onStackCreateObject);
     Variable<> y(CONSTANT, "y"); y.asArg(onStackCreateObject);
 
-    Function::Func("onStackCreateObject", x, y);
+    onStackCreateObject.Func("onStackCreateObject", x, y);
         Variable<> radius(CONSTANT, "radius"); radius = Common("random", 15, 30);
         Variable<> skill(CONSTANT, "skill"); skill = JSObject("skills[Math.floor(Common.random(0, skills.length))]");
         Variable<> texture(CONSTANT, "texture"); texture = JSObject(R"('./imgs/skills/' + skill + '.png')");
@@ -38,7 +37,7 @@ inline void OnStackCreateObject(Variable<>& Common, Variable<>& Bodies) {
         img>>"onload" = JSObject("function() {body.render.sprite.xScale = (radius * 2) / img.width;body.render.sprite.yScale = (radius * 2) / img.width;}");
 
         Function::Return(body);
-    Function::EndFunc();
+    onStackCreateObject.EndFunc();
 }
 
 inline void skillBallPit() {
@@ -104,8 +103,9 @@ inline void skillBallPit() {
 
     Runner("run", runner, engine);
 
+    Function test{};
 
-    std::cout << Function::funcJs;
+    std::cout << Function::GetFunctions();
     std::cout << JS::js;
 }
 
