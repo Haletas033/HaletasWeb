@@ -113,6 +113,8 @@ inline void WriteHTML(const std::string &filename, const Tag &header, const Tag 
         .put(Tag("meta").addAttr("charset", "UTF-8"))
         .put(Tag("meta").addAttr("name", "viewport").addAttr("content", "width=device-width, initial-scale=1.0"))
         .put(Tag("link").addAttr("href", "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css").addAttr("rel", "stylesheet"))
+        /*test stylesheet*/
+        .put(Tag("link").addAttr("rel", "stylesheet").addAttr("href", "styles/style.css"))
 
         //Prism for syntax highlighting
         .put(Tag("link").addAttr("href", "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-tomorrow.css").addAttr("rel", "stylesheet"))

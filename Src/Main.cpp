@@ -4,8 +4,10 @@
 #include "pages/documentation.html.h"
 #include "pages/docs/LSIMdocs.h"
 #include "scripts/skillBallPit.js.h"
+#include "styles/style.css.h"
 
 int main() {
+    Stylesheet();
     index();
     links();
     projects();
