@@ -11,7 +11,7 @@ add_executable(HaletasWeb Src/Main.cpp
         Src/utils/nav/nav.cpp
         Src/utils/misc/misc.cpp
         Src/JS/jsCore.h
-        Src/scripts/skillBallPit.h
+        Src/scripts/skillBallPit.js.h
         Src/JS/variable.h
         Src/JS/js.h
         Src/JS/console.h
@@ -30,7 +30,6 @@ target_include_directories(HaletasWeb PRIVATE
 )
 
 file(COPY ${CMAKE_SOURCE_DIR}/LSIMdocs DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/scripts DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/skills DESTINATION ${CMAKE_BINARY_DIR})
 
 # Link the static library directly
