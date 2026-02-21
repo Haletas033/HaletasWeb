@@ -7,11 +7,12 @@
 #include "styles/style.css.h"
 
 int main() {
-    Stylesheet();
+
     index();
     links();
     projects();
     documentation();
     docs::LSIMDocs();
+    Stylesheet();
     skillBallPit();
 }
