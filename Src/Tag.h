@@ -82,6 +82,8 @@ public:
 inline void WriteHTML(const std::string &filename, const Tag &header, const Tag &main, const std::string &title, const Tag &extraHead = Tag("")) {
     try {
         std::filesystem::create_directories("out");
+        std::filesystem::create_directories("out/scripts");
+        std::filesystem::create_directories("out/styles");
 
         //Copy docs imgs
         std::filesystem::copy("LSIMdocs/imgs", "out/imgs",
