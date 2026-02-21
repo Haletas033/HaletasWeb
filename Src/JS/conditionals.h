@@ -128,11 +128,11 @@ public:
     }
 
     static void ElseIf(const Conditional &cond) {
-        *JS::currJs += "else if (" + cond.js + ") {";
+        *JS::currJs += "}\n else if (" + cond.js + ") {";
     }
 
     static void Else() {
-        *JS::currJs += "else {";
+        *JS::currJs += "}\n else {";
     }
 
     static void EndIf() {

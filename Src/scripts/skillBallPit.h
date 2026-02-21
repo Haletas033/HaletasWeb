@@ -8,15 +8,29 @@
 
 #include "../JS/js.h"
 
+inline void ResizeImage() {
+    Function resizeImage{};
 
+    Variable<> body(CONSTANT, "body"); body.asArg(resizeImage);
+    Variable<> radius(CONSTANT, "radius"); radius.asArg(resizeImage);
+    Variable<> img(CONSTANT, "img"); img.asArg(resizeImage);
 
-inline void OnStackCreateObject(Variable<>& Common, Variable<>& Bodies) {
+    resizeImage.Func("resizeImage", body, radius, img);
+        body>>"render">>"sprite">>"xScale" = radius * 2 / img>>"width";
+        body>>"render">>"sprite">>"yScale" = radius * 2 / img>>"height";
+    resizeImage.EndFunc();
+}
+
+inline void OnStackCreateObject() {
     Function onStackCreateObject{};
 
     Variable<> x(CONSTANT, "x"); x.asArg(onStackCreateObject);
     Variable<> y(CONSTANT, "y"); y.asArg(onStackCreateObject);
+    Variable<> skills(CONSTANT, "skills"); skills.asArg(onStackCreateObject);
+    Variable<> Common(CONSTANT, "Common"); Common.asArg(onStackCreateObject);
+    Variable<> Bodies(CONSTANT, "Bodies"); Bodies.asArg(onStackCreateObject);
 
-    onStackCreateObject.Func("onStackCreateObject", x, y);
+    onStackCreateObject.Func("onStackCreateObject", x, y, skills, Common, Bodies);
         Variable<> radius(CONSTANT, "radius"); radius = Common("random", 15, 30);
         Variable<> skill(CONSTANT, "skill"); skill = JSObject("skills[Math.floor(Common.random(0, skills.length))]");
         Variable<> texture(CONSTANT, "texture"); texture = JSObject(R"('./imgs/skills/' + skill + '.png')");
@@ -33,14 +47,19 @@ inline void OnStackCreateObject(Variable<>& Common, Variable<>& Bodies) {
         Cond::EndIf();
 
         Variable<> img(LET, "img"); img = JSObject("new Image()");
+
         img>>"src" = texture;
-        img>>"onload" = JSObject("function() {body.render.sprite.xScale = (radius * 2) / img.width;body.render.sprite.yScale = (radius * 2) / img.width;}");
+        img>>"onload" = Function::ArrowCall("resizeImage", body, radius, img);
 
         Function::Return(body);
     onStackCreateObject.EndFunc();
 }
 
 inline void skillBallPit() {
+    //Function declarations
+    ResizeImage();
+    OnStackCreateObject();
+
     Console::Log("Hello, World");
     Variable<> Engine(CONSTANT, "Engine"); Engine = JSObject("Matter.Engine");
     Variable<> Render(CONSTANT, "Render"); Render = JSObject("Matter.Render");
@@ -89,10 +108,9 @@ inline void skillBallPit() {
     Variable<> wallLeft(LET, "wallLeft"); wallLeft = Bodies("rectangle", 0, 610, 60, 800, JSObject("{ isStatic: true }"));
     Variable<> wallRight(LET, "wallRight"); wallRight = Bodies("rectangle", 800, 610, 60, 800, JSObject("{ isStatic: true }"));
 
-    OnStackCreateObject(Common, Bodies);
-
     Variable<> stack(LET, "stack"); stack = Composites("stack", 100, 0, 10, 8, 10, 10,
-        Function::CallBack("onStackCreateObject"));
+        Function::ArrowCall("onStackCreateObject", std::make_tuple(JSObject("x"),
+            JSObject("y")), JSObject("x"), JSObject("y"), skills, Common, Bodies));
 
     Composite("add", world, std::vector{ground, wallLeft, wallRight, stack});
     Composite("add", world, mouseConstraint);
@@ -103,10 +121,7 @@ inline void skillBallPit() {
 
     Runner("run", runner, engine);
 
-    Function test{};
-
-    std::cout << Function::GetFunctions();
-    std::cout << JS::js;
+    Build("skillBallPit");
 }
 
 #endif //SKILLBALLPIT_H

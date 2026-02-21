@@ -101,6 +101,19 @@ public:
         return CallResult(name + '(' + AddArgs(args...) + ")");
     }
 
+    //For void functions
+    template <typename ...Args>
+    static CallResult ArrowCall(const std::string& name, Args&&...args) {
+        return CallResult("() => " + name + '(' + AddArgs(args...) + ")");
+    }
+
+    template <typename ...WantedArgs, typename ...Args>
+    static CallResult ArrowCall(const std::string& name, std::tuple<WantedArgs...> wantedArgs, Args&&...args) {
+        //Get args from tuple
+        std::string wantedStr = std::apply([](auto&&... elems){ return AddArgs(elems...); }, wantedArgs);
+        return CallResult("(" + wantedStr + ") => " + name + '(' + AddArgs(args...) + ")");
+    }
+
     static CallResult CallBack(const std::string& name) { return CallResult(name); }
 };
 

@@ -126,6 +126,19 @@ struct CallResult {
         return *this;
     }
 
+    template <typename V>
+    CallResult operator>>(V object) {
+        std::string result;
+
+        if constexpr (!std::is_convertible_v<V, std::string>)
+            throw std::logic_error(std::string("Expected function name/string type got ") + typeid(V).name() + " instead.");
+
+        if constexpr (std::is_convertible_v<V, std::string>) result+=this->use() + "." + object;
+        else throw std::logic_error(std::string("Expected object name/string type got ") + typeid(V).name() + " instead.");
+
+        //Close function
+        return CallResult(result);
+    }
 };
 
 //Used when you need to reference a variable or something from a js file
@@ -199,6 +212,7 @@ public:
     Variable asArg(Function& func) {
         func.argCount++;
         this->isArg = true;
+        nextInitializedIsRequired = false;
         return *this;
     }
 

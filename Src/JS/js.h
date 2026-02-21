@@ -11,5 +11,6 @@
 #include "console.h"
 #include "function.h"
 #include "conditionals.h"
+#include "buildJS.h"
 
 #endif //JS_H

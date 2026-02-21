@@ -93,11 +93,6 @@ inline void WriteHTML(const std::string &filename, const Tag &header, const Tag 
         std::filesystem::copy_options::recursive |
         std::filesystem::copy_options::overwrite_existing);
 
-        //Copy scripts
-        std::filesystem::copy("scripts", "out/scripts",
-        std::filesystem::copy_options::recursive |
-        std::filesystem::copy_options::overwrite_existing);
-
     } catch (const std::filesystem::filesystem_error& e) {
         std::cerr << "Warning: could not copy imgs: " << e.what() << '\n';
     }
@@ -132,7 +127,7 @@ inline void WriteHTML(const std::string &filename, const Tag &header, const Tag 
         .put(Tag("script")
             .addAttr("src", "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"))
 
-        //Matter.js for a bit of phsyics
+        //Matter.js for a bit of physics
         .put(Tag("script")
                 .addAttr("src", "https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"))
 
