@@ -58,7 +58,7 @@ public:
     }
 
     Style& put(const std::string& name, const std::string& value) {
-        properties.emplace_back(name, value);
+        properties.push_back(std::make_tuple(name, value));
         return *this;
     }
 

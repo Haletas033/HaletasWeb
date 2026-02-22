@@ -9,8 +9,7 @@
 
 //Currently a test
 inline void Stylesheet() {
-    Style h1("h1");
-    h1
+    Style h1 = Style("h1")
         .put("color", "red");
 
     Builder::Build("style");

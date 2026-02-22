@@ -19,7 +19,7 @@ inline void projects() {
 
     main.put(h1("Projects"));
 
-    main.put(repos::generateRepoLinks("Haletas033"));
+    main.put(repos::getRepoData("Haletas033"));
 
     WriteHTML("projects.html", HaletasWeb::DefaultHTMLHead(), header, main, "Projects", Tag("style").text(misc::extraStyles));
 }

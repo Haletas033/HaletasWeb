@@ -9,8 +9,6 @@
 #include "../utils/misc/misc.h"
 #include "../utils/nav/nav.h"
 
-extern HaletasWeb site;
-
 inline void _404() {
     Tag header("header");
     header.put(nav::buildNavbar());
