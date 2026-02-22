@@ -21,6 +21,9 @@ add_executable(HaletasWeb Src/Main.cpp
         Src/JS/buildJS.h
         Src/style.h
         Src/styles/style.css.h
+        Src/pages/404.html.h
+        Src/setup.h
+        Src/haletasWebSetup.h
 )
 
 add_subdirectory(external/cmark-0.31.1)

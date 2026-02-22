@@ -17,7 +17,7 @@ inline void ResizeImage() {
 
     resizeImage.Func("resizeImage", body, radius, img);
         body>>"render">>"sprite">>"xScale" = radius * 2 / img>>"width";
-        body>>"render">>"sprite">>"yScale" = radius * 2 / img>>"height";
+        body>>"render">>"sprite">>"yScale" = radius * 2 / img>>"width"; //Use width for both to fix stretching
     resizeImage.EndFunc();
 }
 

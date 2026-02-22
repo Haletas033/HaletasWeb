@@ -21,7 +21,7 @@ inline void projects() {
 
     main.put(repos::generateRepoLinks("Haletas033"));
 
-    WriteHTML("projects.html", header, main, "Projects", Tag("style").text(misc::extraStyles));
+    WriteHTML("projects.html", site.GetHead(), header, main, "Projects", Tag("style").text(misc::extraStyles));
 }
 
 #endif //PROJECTS_H

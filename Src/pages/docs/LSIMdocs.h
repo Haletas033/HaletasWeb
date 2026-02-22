@@ -50,7 +50,7 @@ namespace docs {
         main
             .text(html);
 
-        WriteHTML("LSIMdocs.html", header, main, "Docs", Tag("style").text(misc::extraStyles));
+        WriteHTML("LSIMdocs.html", site.GetHead(), header, main, "Docs", Tag("style").text(misc::extraStyles));
     }
 }
 

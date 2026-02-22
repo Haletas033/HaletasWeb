@@ -1,3 +1,5 @@
+#include "haletasWebSetup.h"
+#include "pages/404.html.h"
 #include "pages/index.html.h"
 #include "pages/links.html.h"
 #include "pages/projects.html.h"
@@ -6,9 +8,14 @@
 #include "scripts/skillBallPit.js.h"
 #include "styles/style.css.h"
 
+HaletasWeb site;
+
 int main() {
+    //Setup
+    site.SetupHaletasWeb();
 
     index();
+    _404();
     links();
     projects();
     documentation();

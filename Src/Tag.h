@@ -79,27 +79,7 @@ public:
     }
 };
 
-inline void WriteHTML(const std::string &filename, const Tag &header, const Tag &main, const std::string &title, const Tag &extraHead = Tag("")) {
-    try {
-        std::filesystem::create_directories("out");
-        std::filesystem::create_directories("out/scripts");
-        std::filesystem::create_directories("out/styles");
-
-        //Copy docs imgs
-        std::filesystem::copy("LSIMdocs/imgs", "out/imgs",
-        std::filesystem::copy_options::recursive |
-        std::filesystem::copy_options::overwrite_existing);
-
-        //Copy skills imgs
-        std::filesystem::copy("skills", "out/imgs/skills",
-        std::filesystem::copy_options::recursive |
-        std::filesystem::copy_options::overwrite_existing);
-
-    } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "Warning: could not copy imgs: " << e.what() << '\n';
-    }
-
-
+inline void WriteHTML(const std::string &filename, Tag head, const Tag &header, const Tag &main, const std::string &title, const Tag &extraHead = Tag("")) {
     std::ofstream htmlFile("out/" + filename);
 
 
@@ -110,33 +90,8 @@ inline void WriteHTML(const std::string &filename, const Tag &header, const Tag 
 
     Tag html = Tag("html").addAttr("lang", "en");
 
-    Tag head("head");
-    head
-        .put(Tag("meta").addAttr("charset", "UTF-8"))
-        .put(Tag("meta").addAttr("name", "viewport").addAttr("content", "width=device-width, initial-scale=1.0"))
-        .put(Tag("link").addAttr("href", "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css").addAttr("rel", "stylesheet"))
-        /*test stylesheet*/
-        .put(Tag("link").addAttr("rel", "stylesheet").addAttr("href", "styles/style.css"))
-
-        //Prism for syntax highlighting
-        .put(Tag("link").addAttr("href", "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-tomorrow.css").addAttr("rel", "stylesheet"))
-        .put(Tag("script").addAttr("src", "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"))
-
-        //json
-        .put(Tag("script").addAttr("src", "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-json.min.js"))
-        //C-like
-        .put(Tag("script").addAttr("src", "https://unpkg.com/prismjs@1.30.0/components/prism-c.min.js"))
-
-        //Mathjax for latex support
-        .put(Tag("script")
-            .addAttr("src", "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"))
-
-        //Matter.js for a bit of physics
-        .put(Tag("script")
-                .addAttr("src", "https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"))
-
-        .put(extraHead)
-        .put(Tag("title").text(title));
+    head.put(extraHead)
+    .put(Tag("title").text(title));
 
     Tag body("body");
 
