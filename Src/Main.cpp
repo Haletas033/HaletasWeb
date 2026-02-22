@@ -8,11 +8,9 @@
 #include "scripts/skillBallPit.js.h"
 #include "styles/style.css.h"
 
-HaletasWeb site;
-
 int main() {
     //Setup
-    site.SetupHaletasWeb();
+    HaletasWeb::SetupHaletasWeb();
 
     index();
     _404();

@@ -29,7 +29,7 @@ inline void documentation() {
         .put(h1("Documentation"))
         .put(docs);
 
-    WriteHTML("docs.html", site.GetHead(), header, main, "Docs", Tag("style").text(misc::extraStyles));
+    WriteHTML("docs.html", HaletasWeb::DefaultHTMLHead(), header, main, "Docs", Tag("style").text(misc::extraStyles));
 }
 
 #endif //DOCUMENTATION_H

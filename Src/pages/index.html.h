@@ -44,7 +44,7 @@ inline void index() {
 
     main.put(Tag("script").addAttr("src", "scripts/skillBallPit.js"));
 
-    WriteHTML("index.html", site.GetHead(), header, main, "Home", Tag("style").text(misc::extraStyles));
+    WriteHTML("index.html", HaletasWeb::DefaultHTMLHead(), header, main, "Home", Tag("style").text(misc::extraStyles));
 }
 
 #endif //INDEX_H

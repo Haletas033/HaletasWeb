@@ -27,7 +27,7 @@ inline void links() {
 
     main.put(links);
 
-    WriteHTML("links.html", site.GetHead(), header, main, "Links", Tag("style").text(misc::extraStyles));
+    WriteHTML("links.html", HaletasWeb::DefaultHTMLHead(), header, main, "Links", Tag("style").text(misc::extraStyles));
 }
 
 #endif //LINKS_H

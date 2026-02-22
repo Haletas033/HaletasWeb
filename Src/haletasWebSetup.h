@@ -9,7 +9,7 @@
 
 class HaletasWeb final{
 public:
-    void SetupFileStructure() {
+    static void SetupFileStructure() {
         Setup::CreateDir("out");
         Setup::CreateDir("scripts");
         Setup::CreateDir("styles");
@@ -45,7 +45,7 @@ public:
                     .addAttr("src", "https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"));
     }
 
-     void SetupHaletasWeb() {
+    static void SetupHaletasWeb() {
         SetupFileStructure();
     }
 };

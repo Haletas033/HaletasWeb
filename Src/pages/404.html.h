@@ -22,7 +22,7 @@ inline void _404() {
 
     main.put(h1("404"));
 
-    WriteHTML("404.html", site.GetHead(), header, main, "404", Tag("style").text(misc::extraStyles));
+    WriteHTML("404.html", HaletasWeb::DefaultHTMLHead(), header, main, "404", Tag("style").text(misc::extraStyles));
 }
 
 #endif //INC_404_HTML_H
