@@ -7,19 +7,19 @@
 #include "setup.h"
 
 
-class HaletasWeb final : public Setup::Output, public Setup::HTMLHead{
+class HaletasWeb final{
 public:
-    void SetupSiteOutput() override {
-        CreateDir("out");
-        CreateDir("scripts");
-        CreateDir("styles");
+    void SetupFileStructure() {
+        Setup::CreateDir("out");
+        Setup::CreateDir("scripts");
+        Setup::CreateDir("styles");
 
-        CopyDir("LSIMDocs/imgs", "imgs");
-        CopyDir("skills", "imgs/skills");
+        Setup::CopyDir("LSIMDocs/imgs", "imgs");
+        Setup::CopyDir("skills", "imgs/skills");
     }
 
     //Default head
-    Tag SetupHTMLHead() override {
+    static Tag DefaultHTMLHead() {
         return Tag("head")
             .put(Tag("meta").addAttr("charset", "UTF-8"))
             .put(Tag("meta").addAttr("name", "viewport").addAttr("content", "width=device-width, initial-scale=1.0"))
@@ -46,8 +46,7 @@ public:
     }
 
      void SetupHaletasWeb() {
-        SetupSiteOutput();
-        this->head = SetupHTMLHead();
+        SetupFileStructure();
     }
 };
 
