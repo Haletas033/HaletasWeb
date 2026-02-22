@@ -1,5 +1,5 @@
 websiteIndex: index.html;
 docsIndex: 404.html;
-build: README.md, hoih.h, youll.h;
+build: Src/pages/index.html.h, Src/scripts/skillBallPit.js.h, Src/pages/links.html.h;
 resources: yous.h, sdf.h, eios.h;
-styles: sdfwe.h, tres.h, fgd.h;
+styles: Src/styles/style.css.h;
