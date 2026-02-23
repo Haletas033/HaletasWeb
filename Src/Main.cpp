@@ -16,8 +16,8 @@ int main() {
     _404();
     links();
     // projects();
-    documentation();
-    docs::LSIMDocs();
+    //documentation();
+    //docs::LSIMDocs();
     Stylesheet();
     skillBallPit();
 }
