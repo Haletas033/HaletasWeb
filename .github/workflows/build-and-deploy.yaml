@@ -33,12 +33,22 @@ jobs:
           mkdir -p build
           cd build
           cmake ..
-          cmake --build .
+          cmake --build . --target HaletasWeb
 
       - name: Run HaletasWeb generator
         run: |
           cd build
           ./HaletasWeb
+
+      - name: Build SubProjects
+        run: |
+          cd build
+          cmake --build . --target SubProjects
+
+      - name: Run SubProjects
+        run: |
+          cd build
+          ./SubProjects
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
