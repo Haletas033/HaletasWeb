@@ -40,15 +40,15 @@ jobs:
           cd build
           ./HaletasWeb
 
-      - name: Build SubProjects
-        run: |
-          cd build
-          cmake --build . --target SubProjects
-
-      - name: Run SubProjects
-        run: |
-          cd build
-          ./SubProjects
+#      - name: Build SubProjects
+#        run: |
+#          cd build
+#          cmake --build . --target SubProjects
+#
+#      - name: Run SubProjects
+#        run: |
+#          cd build
+#          ./SubProjects
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
