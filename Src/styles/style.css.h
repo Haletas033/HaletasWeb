@@ -16,5 +16,4 @@ inline void Stylesheet() {
     Builder::Build("style");
 }
 
-
 #endif //STYLE_CSS_H

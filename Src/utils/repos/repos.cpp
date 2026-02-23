@@ -234,6 +234,8 @@ Tag repos::getRepoData(const std::string& username) {
 
     loadProjectHeaders();
 
+    loadResources();
+
     cleanupCurl();
 
     return container;
