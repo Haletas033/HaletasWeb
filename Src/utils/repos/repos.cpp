@@ -221,14 +221,13 @@ Tag repos::getRepoData(const std::string& username) {
     for (const auto& repo : repos) {
         if (!repo.is_object()) continue;
         std::string repoName = repo["name"];
-        //test
-        if (repoName == "null") {
-            Dsp dsp;
-            dsp = parseDsp(getDsp(repoName));
-            dsp.repoName = repoName;
-            generateRepoCard(repo, container, dsp);
-            dsps.push_back(dsp);
-        }
+
+        Dsp dsp;
+        dsp = parseDsp(getDsp(repoName));
+        dsp.repoName = repoName;
+        generateRepoCard(repo, container, dsp);
+        dsps.push_back(dsp);
+
     }
 
     generateProjectsCPP();
