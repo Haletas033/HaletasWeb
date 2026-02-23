@@ -40,6 +40,11 @@ jobs:
           cd build
           ./HaletasWeb
 
+      - name: Check generated file
+        run: |
+          ls build/projectBuildSrc/
+          cat build/projectBuildSrc/main.cpp
+
       - name: Build SubProjects
         run: |
           cd build
