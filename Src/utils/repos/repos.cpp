@@ -176,6 +176,20 @@ void repos::loadProjectHeaders() {
     }
 }
 
+void repos::getFileStructure(const std::string& path, const std::string& repoName) {
+    nlohmann::json json = getUrl("https://api.github.com/repos/Haletas033/" + repoName + "/contents/" + path);
+    std::cout << json << '\n';
+}
+
+void repos::loadResources() {
+    for (const auto& dsp : dsps) {
+        for (const auto& f : dsp.resources) {
+            std::filesystem::create_directories("projectBuild/" + f.substr(0, f.find_last_of("/")));
+            getFileStructure(f, dsp.repoName);
+        }
+    }
+}
+
 //Function to parse the GitHub JSON response and generate HTML links
 Tag repos::getRepoData(const std::string& username) {
 
@@ -199,12 +213,14 @@ Tag repos::getRepoData(const std::string& username) {
     for (const auto& repo : repos) {
         if (!repo.is_object()) continue;
         std::string repoName = repo["name"];
-
-        Dsp dsp;
-        dsp = parseDsp(getDsp(repoName));
-        dsp.repoName = repoName;
-        generateRepoCard(repo, container, dsp);
-        dsps.push_back(dsp);
+        //test
+        if (repoName == "HaletasWeb") {
+            Dsp dsp;
+            dsp = parseDsp(getDsp(repoName));
+            dsp.repoName = repoName;
+            generateRepoCard(repo, container, dsp);
+            dsps.push_back(dsp);
+        }
     }
 
     generateProjectsCPP();
