@@ -16,11 +16,17 @@ size_t repos::writeCallBack(void* contents, size_t size, size_t nmemb, void* use
     return size * nmemb;
 }
 
+void initCurl() {
+    curl_global_init(CURL_GLOBAL_DEFAULT); //Initialize global curl state
+}
+
+void cleanupCurl() {
+    curl_global_cleanup(); //Clean up the global curl state
+}
+
 //Fetches a users GitHub repos
 std::string repos::getUrl(const std::string& url) {
     std::string readBuffer;
-
-    curl_global_init(CURL_GLOBAL_DEFAULT); //Initialize global curl state
 
     if (CURL *curl = curl_easy_init()) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -37,7 +43,7 @@ std::string repos::getUrl(const std::string& url) {
     }
 
 
-    curl_global_cleanup(); //Clean up the global curl state
+
     return readBuffer; //Return the response data
 }
 
@@ -193,6 +199,8 @@ void repos::loadResources() {
 //Function to parse the GitHub JSON response and generate HTML links
 Tag repos::getRepoData(const std::string& username) {
 
+    initCurl();
+
     std::string response = getRepos(username);
 
     Tag container = div();
@@ -214,7 +222,7 @@ Tag repos::getRepoData(const std::string& username) {
         if (!repo.is_object()) continue;
         std::string repoName = repo["name"];
         //test
-        if (repoName == "null") {
+        if (repoName == "HaletasWeb") {
             Dsp dsp;
             dsp = parseDsp(getDsp(repoName));
             dsp.repoName = repoName;
@@ -226,6 +234,8 @@ Tag repos::getRepoData(const std::string& username) {
     generateProjectsCPP();
 
     loadProjectHeaders();
+
+    cleanupCurl();
 
     return container;
 }
