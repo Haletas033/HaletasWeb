@@ -14,8 +14,8 @@ public:
         Setup::CreateDir("scripts");
         Setup::CreateDir("styles");
 
-        Setup::CopyDir("LSIMDocs/imgs", "imgs");
-        Setup::CopyDir("skills", "imgs/skills");
+        Setup::CopyDir("../LSIMDocs/imgs", "imgs");
+        Setup::CopyDir("../skills", "imgs/skills");
     }
 
     //Default head
