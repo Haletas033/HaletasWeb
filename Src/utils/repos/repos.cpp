@@ -133,8 +133,8 @@ void repos::generateRepoCard(const nlohmann::json& repo, Tag& container, const D
 }
 
 void repos::generateProjectsCPP() {
-    Setup::CreateDir("../projectBuild");
-    std::ofstream outFile("projectBuild/main.cpp");
+    Setup::CreateDir("../projectBuild/Src");
+    std::ofstream outFile("projectBuild/Src/main.cpp");
     std::string output = "#include \"haletasWebSetup.h\"\n";
     //Generate includes
     for (auto dsp : dsps) {
