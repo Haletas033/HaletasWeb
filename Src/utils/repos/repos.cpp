@@ -139,10 +139,12 @@ void repos::generateProjectsCPP() {
     //Generate includes
     for (auto dsp : dsps) {
         for (auto f : dsp.build) {
-            output += "#include \"" + f + "\"\n";
+            if (f != "")
+                output += "#include \"" + f + "\"\n";
         }
         for (auto f : dsp.styles) {
-            output += "#include \"" + f + "\"\n";
+            if (f != "")
+                output += "#include \"" + f + "\"\n";
         }
     }
 
@@ -152,14 +154,18 @@ void repos::generateProjectsCPP() {
     //Generate function calls
     for (const auto& dsp : dsps) {
         for (const auto& f : dsp.build) {
-            std::string name = f.substr(f.find_last_of("/") + 1);
-            name = name.substr(0, name.find_first_of('.'));
-            output += name + "();\n";
+            if (f != "") {
+                std::string name = f.substr(f.find_last_of("/") + 1);
+                name = name.substr(0, name.find_first_of('.'));
+                output += name + "();\n";
+            }
         }
         for (const auto& f : dsp.styles) {
-            std::string name = f.substr(f.find_last_of("/") + 1);
-            name = name.substr(0, name.find_first_of('.'));
-            output += name + "();\n";
+            if (f != "") {
+                std::string name = f.substr(f.find_last_of("/") + 1);
+                name = name.substr(0, name.find_first_of('.'));
+                output += name + "();\n";
+            }
         }
     }
 
