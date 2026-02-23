@@ -27,8 +27,8 @@ set(BaseFiles
 add_executable(HaletasWeb Src/Main.cpp
         ${BaseFiles}
 )
-
-add_executable(SubProjects Src/main.cpp
+set_source_files_properties(${CMAKE_BINARY_DIR}/projectBuildSrc/main.cpp PROPERTIES GENERATED TRUE)
+add_executable(SubProjects ${CMAKE_BINARY_DIR}/projectBuildSrc/main.cpp
         ${BaseFiles}
 )
 
