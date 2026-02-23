@@ -41,6 +41,7 @@ target_include_directories(HaletasWeb PRIVATE
 )
 
 target_include_directories(SubProjects PRIVATE
+        "${CMAKE_SOURCE_DIR}/Src"
         "${CMAKE_SOURCE_DIR}/external/cmark-0.31.1/src"
         "${CMAKE_SOURCE_DIR}/external/cmark-0.31.1/build/src"
 )
