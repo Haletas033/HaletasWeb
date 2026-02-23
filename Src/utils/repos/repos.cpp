@@ -183,8 +183,19 @@ void repos::loadProjectHeaders() {
 }
 
 void repos::getFileStructure(const std::string& path, const std::string& repoName) {
-    nlohmann::json json = getUrl("https://api.github.com/repos/Haletas033/" + repoName + "/contents/" + path);
-    std::cout << json << '\n';
+    const std::string response = getUrl("https://api.github.com/repos/Haletas033/" + repoName + "/contents/" + path);
+    if (response.empty()) return;
+    nlohmann::json json = nlohmann::json::parse(response);
+
+    for (const auto &entry : json) {
+        if (entry["type"] == "dir") {
+            Setup::CreateDir(entry["name"]);
+            getFileStructure(path + std::string(entry["name"] ) + "/", repoName);
+        } else if (entry["type"] == "file") {
+            std::ofstream("projectBuild/" + path + "/" + std::string(entry["name"])) << getUrl("https://raw.githubusercontent.com/Haletas033/" + repoName + "/master/" + path + std::string(entry["name"]));
+        }
+
+    }
 }
 
 void repos::loadResources() {
