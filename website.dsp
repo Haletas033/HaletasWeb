@@ -1,5 +1,5 @@
 websiteIndex: index.html;
 docsIndex:;
-website:;
+build:;
 resources: LSIMdocs, skills;
 styles:;
