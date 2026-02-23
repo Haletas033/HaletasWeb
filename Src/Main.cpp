@@ -15,7 +15,7 @@ int main() {
     index();
     _404();
     links();
-    //projects();
+    projects();
     documentation();
     docs::LSIMDocs();
     Stylesheet();
