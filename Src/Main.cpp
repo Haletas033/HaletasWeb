@@ -18,6 +18,6 @@ int main() {
     projects();
     documentation();
     docs::LSIMDocs();
-    //Stylesheet();
+    Stylesheet();
     skillBallPit();
 }
