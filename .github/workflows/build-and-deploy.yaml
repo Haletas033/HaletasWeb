@@ -43,6 +43,7 @@ jobs:
       - name: Build SubProjects
         run: |
           cd build
+          cmake ..
           cmake --build . --target SubProjects
 
       - name: Run SubProjects
