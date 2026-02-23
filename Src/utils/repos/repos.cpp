@@ -214,7 +214,7 @@ Tag repos::getRepoData(const std::string& username) {
         if (!repo.is_object()) continue;
         std::string repoName = repo["name"];
         //test
-        if (repoName == "HaletasWeb") {
+        if (repoName == "null") {
             Dsp dsp;
             dsp = parseDsp(getDsp(repoName));
             dsp.repoName = repoName;
