@@ -13,11 +13,11 @@ int main() {
     HaletasWeb::SetupHaletasWeb();
 
     index();
-    _404();
-    links();
-    projects();
-    documentation();
-    docs::LSIMDocs();
-    Stylesheet();
-    skillBallPit();
+    //_404();
+    // links();
+    // projects();
+    // documentation();
+    // docs::LSIMDocs();
+    // Stylesheet();
+    //skillBallPit();
 }
