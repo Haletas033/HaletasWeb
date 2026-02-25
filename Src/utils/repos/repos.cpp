@@ -62,12 +62,14 @@ Dsp repos::parseDsp(const std::pair<std::string, long>& dsp) {
     std::string buff;
     Dsp output;
     bool inComment = false;
+    bool inString = false;
     if (dsp.second != 200) return Dsp{};
     for (const char c : dsp.first) {
-        if (c == '#') inComment = true;
+        if (c == '#' && !inString) inComment = true;
         else if (c == '\n') inComment = false;
-        if (!isspace(c) && !inComment) {
-            if (c == ':') {
+        else if (c == '\"') inString = !inString;
+        else if ((!isspace(c) && !inComment) || inString) {
+            if (c == ':' && !inString) {
                 if (buff == "websiteIndex") indexSetter = [&output](const std::string& value) { output.websiteIndex = value; };
                 else if (buff == "docsIndex") indexSetter = [&output](const std::string& value) { output.docs.docsIndex = value; };
                 else if (buff == "docsTitle") indexSetter = [&output](const std::string& value) { output.docs.docsTitle = value; };
