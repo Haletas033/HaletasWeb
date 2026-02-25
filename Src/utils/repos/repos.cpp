@@ -142,14 +142,14 @@ void repos::generateProjectsCPP() {
         for (auto f : dsp.build) {
             //Remove Website dir
             if (f.find("Website/Src/") == 0)
-                f = f.substr(8);
+                f = f.substr(12);
             if (f != "")
                 output += "#include \"" + f + "\"\n";
         }
         for (auto f : dsp.styles) {
             //Remove Website dir
             if (f.find("Website/Src/") == 0)
-                f = f.substr(8);
+                f = f.substr(12);
             if (f != "")
                 output += "#include \"" + f + "\"\n";
         }
