@@ -58,8 +58,11 @@ Dsp repos::parseDsp(const std::string& dsp) {
     std::vector<file>* field = nullptr;
     std::string buff;
     Dsp output;
+    bool inComment = false;
     for (const char c : dsp) {
-        if (!isspace(c)) {
+        if (c == '#') inComment = true;
+        else if (c == '\n') inComment = false;
+        if (!isspace(c) && !inComment) {
             if (c == ':') {
                 if (buff == "websiteIndex") indexSetter = [&output](const std::string& value) { output.websiteIndex = value; };
                 else if (buff == "docsIndex") indexSetter = [&output](const std::string& value) { output.docs.docsIndex = value; };
@@ -68,6 +71,8 @@ Dsp repos::parseDsp(const std::string& dsp) {
                 else if (buff == "build") field = &output.build;
                 else if (buff == "resources") field = &output.resources;
                 else if (buff == "styles") field = &output.styles;
+                else if (buff == "404") return Dsp{};
+                else throw std::invalid_argument("Unknown argument: " + buff);
 
                 buff = ""; //Clear the buffer
             }
