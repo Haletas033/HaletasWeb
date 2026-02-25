@@ -140,10 +140,16 @@ void repos::generateProjectsCPP() {
     //Generate includes
     for (auto dsp : dsps) {
         for (auto f : dsp.build) {
+            //Remove Website dir
+            if (f.find("Website/") == 0)
+                f = f.substr(8);
             if (f != "")
                 output += "#include \"" + f + "\"\n";
         }
         for (auto f : dsp.styles) {
+            //Remove Website dir
+            if (f.find("Website/") == 0)
+                f = f.substr(8);
             if (f != "")
                 output += "#include \"" + f + "\"\n";
         }
