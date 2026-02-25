@@ -19,11 +19,13 @@ inline void documentation() {
 
     Tag docs("article");
 
-    docs
-        .put(h3()
-            .put(Tag("a").addAttr("href", "LSIMdocs.html")
-                .text("L-SIM ENGINE Documentation")))
-        .put(p("Documentation for how to use the L-SIM ENGINE"));
+    for (auto [docsIndex, docsTitle, docsDescription] : HaletasWeb::docsIndices) {
+        docs
+            .put(h3()
+                .put(Tag("a").addAttr("href", docsIndex)
+                    .text(docsTitle)))
+            .put(p(docsDescription));
+    }
 
     main
         .put(h1("Documentation"))

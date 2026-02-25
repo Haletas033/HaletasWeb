@@ -4,6 +4,7 @@
 
 #include "repos.h"
 
+#include "../../haletasWebSetup.h"
 #include "../../setup.h"
 
 std::vector<Dsp> repos::dsps;
@@ -61,7 +62,9 @@ Dsp repos::parseDsp(const std::string& dsp) {
         if (!isspace(c)) {
             if (c == ':') {
                 if (buff == "websiteIndex") indexSetter = [&output](const std::string& value) { output.websiteIndex = value; };
-                else if (buff == "docsIndex") indexSetter = [&output](const std::string& value) { output.docsIndex = value; };
+                else if (buff == "docsIndex") indexSetter = [&output](const std::string& value) { output.docs.docsIndex = value; };
+                else if (buff == "docsTitle") indexSetter = [&output](const std::string& value) { output.docs.docsTitle = value; };
+                else if (buff == "docsDescription") indexSetter = [&output](const std::string& value) { output.docs.docsDescription = value; };
                 else if (buff == "build") field = &output.build;
                 else if (buff == "resources") field = &output.resources;
                 else if (buff == "styles") field = &output.styles;
@@ -118,8 +121,8 @@ void repos::generateRepoCard(const nlohmann::json& repo, Tag& container, const D
     Tag docs = p("No docs available");
     if (dsp.websiteIndex != "")
          website = Tag("a").addAttr("href", dsp.websiteIndex).put(p("Website"));
-    if (dsp.docsIndex != "")
-         docs = Tag("a").addAttr("href", dsp.docsIndex).put(p("Docs"));
+    if (dsp.docs.docsIndex != "")
+         docs = Tag("a").addAttr("href", dsp.docs.docsIndex).put(p("Docs"));
     Tag otherInfo = p(starsStr + " Stars | " + forksStr + " Forks | " + language);
 
     Tag article("article");
@@ -131,6 +134,11 @@ void repos::generateRepoCard(const nlohmann::json& repo, Tag& container, const D
             .put(otherInfo);
 
     container.put(article);
+}
+
+void repos::updateDocs(const Dsp& dsp) {
+    if (dsp.docs.docsIndex != "")
+        HaletasWeb::docsIndices.push_back(dsp.docs);
 }
 
 void repos::generateProjectsCPP() {
@@ -274,6 +282,7 @@ Tag repos::getRepoData(const std::string& username) {
         dsp = parseDsp(getDsp(repoName));
         dsp.repoName = repoName;
         generateRepoCard(repo, container, dsp);
+        updateDocs(dsp);
         dsps.push_back(dsp);
 
     }

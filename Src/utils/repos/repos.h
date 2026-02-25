@@ -14,16 +14,27 @@
 typedef std::string file;
 typedef std::string page;
 
+struct Docs {
+    page docsIndex;
+    page docsTitle;
+    page docsDescription;
+};
+
 struct Dsp {
     std::string repoName;
     page websiteIndex;
-    page docsIndex;
+
+    Docs docs;
+
+
     std::vector<file> build;
     std::vector<file> resources;
     std::vector<file> styles;
 
     void setWebsiteIndex(const std::string &value) { websiteIndex = value; }
-    void setDocsIndex(const std::string &value) { docsIndex = value; }
+    void setDocsIndex(const std::string &value) { docs.docsIndex = value; }
+    void setDocsTitle(const std::string &value) { docs.docsTitle = value; }
+    void setDocsDescription(const std::string &value) { docs.docsDescription = value; }
 };
 
 class repos {
@@ -44,6 +55,8 @@ public:
     static Dsp parseDsp(const std::string &dsp);
 
     static void generateRepoCard(const nlohmann::json &repo, Tag &container, const Dsp &dsp);
+
+    static void updateDocs(const Dsp &dsp);
 
     static void generateProjectsCPP();
 

@@ -5,10 +5,13 @@
 #ifndef HALETAS_WEB_SETUP_H
 #define HALETAS_WEB_SETUP_H
 #include "setup.h"
+#include "utils/repos/repos.h"
 
 
 class HaletasWeb final{
 public:
+    inline static std::vector<Docs> docsIndices;
+
     static void SetupFileStructure() {
         Setup::CreateDir("out");
         Setup::CreateDir("scripts");
