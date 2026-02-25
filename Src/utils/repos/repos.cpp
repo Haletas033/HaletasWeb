@@ -26,8 +26,9 @@ void cleanupCurl() {
 }
 
 //Fetches a users GitHub repos
-std::string repos::getUrl(const std::string& url) {
+std::pair<std::string, long> repos::getUrl(const std::string &url) {
     std::string readBuffer;
+    long httpCode;
 
     if (CURL *curl = curl_easy_init()) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -41,25 +42,28 @@ std::string repos::getUrl(const std::string& url) {
             std::cerr << "CURL error: " << curl_easy_strerror(res) << std::endl;
         }
 
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+
         curl_easy_cleanup(curl); //Clean up the curl handle after the request is done
     }
 
 
 
-    return readBuffer; //Return the response data
+    return std::make_pair(readBuffer, httpCode); //Return the response data
 }
 
-std::string repos::getDsp(const std::string& repoName) {
+std::pair<std::string, long> repos::getDsp(const std::string &repoName) {
     return getUrl("https://raw.githubusercontent.com/Haletas033/" + repoName + "/master/website.dsp");
 }
 
-Dsp repos::parseDsp(const std::string& dsp) {
+Dsp repos::parseDsp(const std::pair<std::string, long>& dsp) {
     std::function<void(const std::string&)> indexSetter = nullptr;
     std::vector<file>* field = nullptr;
     std::string buff;
     Dsp output;
     bool inComment = false;
-    for (const char c : dsp) {
+    if (dsp.second != 200) return Dsp{};
+    for (const char c : dsp.first) {
         if (c == '#') inComment = true;
         else if (c == '\n') inComment = false;
         if (!isspace(c) && !inComment) {
@@ -71,7 +75,6 @@ Dsp repos::parseDsp(const std::string& dsp) {
                 else if (buff == "build") field = &output.build;
                 else if (buff == "resources") field = &output.resources;
                 else if (buff == "styles") field = &output.styles;
-                else if (buff == "404") return Dsp{};
                 else throw std::invalid_argument("Unknown argument: " + buff);
 
                 buff = ""; //Clear the buffer
@@ -207,7 +210,7 @@ void repos::loadProjectHeaders() {
                 cleanedFile = f.substr(8);
             std::filesystem::create_directories("projectBuild/" + cleanedFile.substr(0, cleanedFile.find_last_of("/")));
             std::ofstream outFile("projectBuild/" + cleanedFile);
-            outFile << getUrl("https://raw.githubusercontent.com/Haletas033/" + dsp.repoName + "/master/" + f);
+            outFile << getUrl("https://raw.githubusercontent.com/Haletas033/" + dsp.repoName + "/master/" + f).first;
         }
 
         for (const auto& f : dsp.styles) {
@@ -217,13 +220,13 @@ void repos::loadProjectHeaders() {
                 cleanedFile = f.substr(8);
             std::filesystem::create_directories("projectBuild/" + f.substr(0, f.find_last_of("/")));
             std::ofstream outFile("projectBuild/" + cleanedFile);
-            outFile << getUrl("https://raw.githubusercontent.com/Haletas033/" + dsp.repoName + "/master/" + f);
+            outFile << getUrl("https://raw.githubusercontent.com/Haletas033/" + dsp.repoName + "/master/" + f).first;
         }
     }
 }
 
 void repos::getFileStructure(std::string path, const std::string& repoName) {
-    const std::string response = getUrl("https://api.github.com/repos/Haletas033/" + repoName + "/contents/" + path);
+    const std::string response = getUrl("https://api.github.com/repos/Haletas033/" + repoName + "/contents/" + path).first;
     if (response.empty()) return;
     nlohmann::json json = nlohmann::json::parse(response);
 
@@ -238,7 +241,7 @@ void repos::getFileStructure(std::string path, const std::string& repoName) {
         } else if (entry["type"] == "file") {
 
             std::cout << "projectBuild/" + path + std::string(entry["name"]) << '\n';
-            std::ofstream("projectBuild/" + cleanedFile + "/" + std::string(entry["name"])) << getUrl("https://raw.githubusercontent.com/Haletas033/" + repoName + "/master/" + path + std::string(entry["name"]));
+            std::ofstream("projectBuild/" + cleanedFile + "/" + std::string(entry["name"])) << getUrl("https://raw.githubusercontent.com/Haletas033/" + repoName + "/master/" + path + std::string(entry["name"])).first;
         }
 
     }

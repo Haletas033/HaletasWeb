@@ -44,15 +44,15 @@ private:
 public:
     static size_t writeCallBack(void* contents, size_t size, size_t nmemb, void* userp);
 
-    static std::string getUrl(const std::string& url);
+    static std::pair<std::string, long> getUrl(const std::string &url);
 
     static std::string getRepos(const std::string& username) {
-        return getUrl("https://api.github.com/users/" + username + "/repos");
+        return getUrl("https://api.github.com/users/" + username + "/repos").first;
     }
 
-    static std::string getDsp(const std::string& repoName);
+    static std::pair<std::string, long> getDsp(const std::string &repoName);
 
-    static Dsp parseDsp(const std::string &dsp);
+    static Dsp parseDsp(const std::pair<std::string, long> &dsp);
 
     static void generateRepoCard(const nlohmann::json &repo, Tag &container, const Dsp &dsp);
 
