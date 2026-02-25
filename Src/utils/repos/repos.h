@@ -41,6 +41,8 @@ class repos {
 private:
     static std::vector<Dsp> dsps;
     static std::string cpp;
+    static std::vector<file> styles;
+    static std::string repoStyles;
 public:
     static size_t writeCallBack(void* contents, size_t size, size_t nmemb, void* userp);
 

@@ -9,6 +9,9 @@
 
 std::vector<Dsp> repos::dsps;
 std::string repos::cpp;
+std::vector<std::string> repos::styles;
+std::string repos::repoStyles;
+
 
 //Callback function for curl to handle HTTPS requests
 size_t repos::writeCallBack(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -223,6 +226,7 @@ void repos::loadProjectHeaders() {
             std::filesystem::create_directories("projectBuild/" + f.substr(0, f.find_last_of("/")));
             std::ofstream outFile("projectBuild/" + cleanedFile);
             outFile << getUrl("https://raw.githubusercontent.com/Haletas033/" + dsp.repoName + "/master/" + f).first;
+            styles.push_back(f);
         }
     }
 }
