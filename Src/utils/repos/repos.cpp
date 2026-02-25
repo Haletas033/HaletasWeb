@@ -241,11 +241,9 @@ void repos::getFileStructure(std::string path, const std::string& repoName) {
             std::filesystem::create_directories("projectBuild/" + cleanedFile + '/' + std::string(entry["name"]));
             getFileStructure(path + '/' + std::string(entry["name"] ) + "/", repoName);
         } else if (entry["type"] == "file") {
-
             std::cout << "projectBuild/" + path + std::string(entry["name"]) << '\n';
             std::ofstream("projectBuild/" + cleanedFile + "/" + std::string(entry["name"])) << getUrl("https://raw.githubusercontent.com/Haletas033/" + repoName + "/master/" + path + std::string(entry["name"])).first;
         }
-
     }
 }
 

@@ -17,6 +17,8 @@ public:
         Setup::CreateDir("scripts");
         Setup::CreateDir("styles");
 
+        std::cout << std::filesystem::current_path();
+
         Setup::CopyDir("LSIMdocs/imgs", "imgs");
         Setup::CopyDir("skills", "imgs/skills");
     }
