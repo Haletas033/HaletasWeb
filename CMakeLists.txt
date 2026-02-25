@@ -28,7 +28,7 @@ add_executable(HaletasWeb Src/Main.cpp
         ${BaseFiles}
 )
 set_source_files_properties(${CMAKE_BINARY_DIR}/projectBuild/Src/main.cpp PROPERTIES GENERATED TRUE)
-add_executable(SubProjects ${CMAKE_BINARY_DIR}/projectBuild/Src/main.cpp
+add_executable(SubProjects EXCLUDE_FROM_ALL ${CMAKE_BINARY_DIR}/projectBuild/Src/main.cpp
         ${BaseFiles}
 )
 
@@ -46,7 +46,6 @@ target_include_directories(SubProjects PRIVATE
         "${CMAKE_SOURCE_DIR}/external/cmark-0.31.1/build/src"
 )
 
-file(COPY ${CMAKE_SOURCE_DIR}/LSIMdocs DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/skills DESTINATION ${CMAKE_BINARY_DIR})
 
 # Link the static library directly

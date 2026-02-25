@@ -49,7 +49,7 @@ public:
 
     static void loadProjectHeaders();
 
-    static void getFileStructure(const std::string &path, const std::string &repoName);
+    static void getFileStructure(std::string path, const std::string &repoName);
 
     static void loadResources();
 

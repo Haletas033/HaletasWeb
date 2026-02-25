@@ -33,6 +33,7 @@ std::string repos::getUrl(const std::string& url) {
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallBack);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
         //Error checking
         if (const CURLcode res = curl_easy_perform(curl); res != CURLE_OK) {
@@ -153,15 +154,21 @@ void repos::generateProjectsCPP() {
 
     //Generate function calls
     for (const auto& dsp : dsps) {
-        for (const auto& f : dsp.build) {
-            if (f != "") {
+        for (auto f : dsp.build) {
+            if (!f.empty()) {
+                //Remove Website dir
+                if (f.find("Website/") == 0)
+                    f = f.substr(8);
                 std::string name = f.substr(f.find_last_of("/") + 1);
                 name = name.substr(0, name.find_first_of('.'));
                 output += name + "();\n";
             }
         }
-        for (const auto& f : dsp.styles) {
-            if (f != "") {
+        for (auto f : dsp.styles) {
+            if (!f.empty()) {
+                //Remove Website dir
+                if (f.find("Website/") == 0)
+                    f = f.substr(8);
                 std::string name = f.substr(f.find_last_of("/") + 1);
                 name = name.substr(0, name.find_first_of('.'));
                 output += name + "();\n";
@@ -175,30 +182,44 @@ void repos::generateProjectsCPP() {
 void repos::loadProjectHeaders() {
     for (const auto& dsp : dsps) {
         for (const auto& f : dsp.build) {
-            std::filesystem::create_directories("projectBuild/" + f.substr(0, f.find_last_of("/")));
-            std::ofstream outFile("projectBuild/" + f);
+            //Remove Website dir
+            std::string cleanedFile = f;
+            if (f.find("Website/") == 0)
+                cleanedFile = f.substr(8);
+            std::filesystem::create_directories("projectBuild/" + cleanedFile.substr(0, cleanedFile.find_last_of("/")));
+            std::ofstream outFile("projectBuild/" + cleanedFile);
             outFile << getUrl("https://raw.githubusercontent.com/Haletas033/" + dsp.repoName + "/master/" + f);
         }
 
         for (const auto& f : dsp.styles) {
+            //Remove Website dir
+            std::string cleanedFile = f;
+            if (f.find("Website/") == 0)
+                cleanedFile = f.substr(8);
             std::filesystem::create_directories("projectBuild/" + f.substr(0, f.find_last_of("/")));
-            std::ofstream outFile("projectBuild/" + f);
+            std::ofstream outFile("projectBuild/" + cleanedFile);
             outFile << getUrl("https://raw.githubusercontent.com/Haletas033/" + dsp.repoName + "/master/" + f);
         }
     }
 }
 
-void repos::getFileStructure(const std::string& path, const std::string& repoName) {
+void repos::getFileStructure(std::string path, const std::string& repoName) {
     const std::string response = getUrl("https://api.github.com/repos/Haletas033/" + repoName + "/contents/" + path);
     if (response.empty()) return;
     nlohmann::json json = nlohmann::json::parse(response);
 
+    std::string cleanedFile = path;
+    if (path.find("Website/") == 0)
+        cleanedFile = path.substr(8);
+
     for (const auto &entry : json) {
         if (entry["type"] == "dir") {
-            Setup::CreateDir(entry["name"]);
-            getFileStructure(path + std::string(entry["name"] ) + "/", repoName);
+            std::filesystem::create_directories("projectBuild/" + cleanedFile + '/' + std::string(entry["name"]));
+            getFileStructure(path + '/' + std::string(entry["name"] ) + "/", repoName);
         } else if (entry["type"] == "file") {
-            std::ofstream("projectBuild/" + path + "/" + std::string(entry["name"])) << getUrl("https://raw.githubusercontent.com/Haletas033/" + repoName + "/master/" + path + std::string(entry["name"]));
+
+            std::cout << "projectBuild/" + path + std::string(entry["name"]) << '\n';
+            std::ofstream("projectBuild/" + cleanedFile + "/" + std::string(entry["name"])) << getUrl("https://raw.githubusercontent.com/Haletas033/" + repoName + "/master/" + path + std::string(entry["name"]));
         }
 
     }
@@ -207,7 +228,11 @@ void repos::getFileStructure(const std::string& path, const std::string& repoNam
 void repos::loadResources() {
     for (const auto& dsp : dsps) {
         for (const auto& f : dsp.resources) {
-            std::filesystem::create_directories("projectBuild/" + f.substr(0, f.find_last_of("/")));
+            //Remove Website dir
+            std::string cleanedFile = f;
+            if (f.find("Website/") == 0)
+                cleanedFile = f.substr(8);
+            std::filesystem::create_directories("projectBuild/" + cleanedFile.substr(0, cleanedFile.find_last_of("/")));
             getFileStructure(f, dsp.repoName);
         }
     }
