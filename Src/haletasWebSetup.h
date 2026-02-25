@@ -19,6 +19,10 @@ public:
 
         std::cout << std::filesystem::current_path();
 
+        for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(std::filesystem::current_path())) {
+            std::cout << entry.path() << "\n";
+        }
+
         Setup::CopyDir("LSIMdocs/imgs", "imgs");
         Setup::CopyDir("skills", "imgs/skills");
     }
