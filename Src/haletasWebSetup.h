@@ -16,6 +16,7 @@ public:
         Setup::CreateDir("out");
         Setup::CreateDir("scripts");
         Setup::CreateDir("styles");
+        Setup::CreateDir("imgs");
 
         std::cout << std::filesystem::current_path();
 
