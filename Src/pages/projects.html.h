@@ -21,7 +21,7 @@ inline void projects() {
 
     main.put(repos::getRepoData("Haletas033"));
 
-    WriteHTML("projects.html", HaletasWeb::DefaultHTMLHead(), header, main, "Projects", Tag("style").text(misc::extraStyles));
+    WriteHTML("projects.html", repos::updateStyles(), header, main, "Projects", Tag("style").text(misc::extraStyles));
 }
 
 #endif //PROJECTS_H

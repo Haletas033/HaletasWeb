@@ -10,8 +10,6 @@
 std::vector<Dsp> repos::dsps;
 std::string repos::cpp;
 std::vector<std::string> repos::styles;
-std::string repos::repoStyles;
-
 
 //Callback function for curl to handle HTTPS requests
 size_t repos::writeCallBack(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -154,6 +152,15 @@ void repos::updateDocs(const Dsp& dsp) {
         HaletasWeb::docsIndices.push_back(dsp.docs);
 }
 
+Tag repos::updateStyles() {
+    Tag updatedHead = HaletasWeb::DefaultHTMLHead();
+    for (auto style : styles) {
+        updatedHead
+        .put(Tag("link").addAttr("rel", "stylesheet").addAttr("href", style));
+    }
+    return updatedHead;
+}
+
 void repos::generateProjectsCPP() {
     Setup::CreateDir("../projectBuild/Src");
     std::ofstream outFile("projectBuild/Src/main.cpp");
@@ -223,10 +230,18 @@ void repos::loadProjectHeaders() {
             std::string cleanedFile = f;
             if (f.find("Website/") == 0)
                 cleanedFile = f.substr(8);
-            std::filesystem::create_directories("projectBuild/" + f.substr(0, f.find_last_of("/")));
+            std::filesystem::create_directories("projectBuild/" + cleanedFile.substr(0, cleanedFile.find_last_of("/")));
             std::ofstream outFile("projectBuild/" + cleanedFile);
             outFile << getUrl("https://raw.githubusercontent.com/Haletas033/" + dsp.repoName + "/master/" + f).first;
-            styles.push_back(f);
+
+            //Get rid of Src/ for styles
+            if (cleanedFile.find("Src/") == 0)
+                cleanedFile = cleanedFile.substr(4);
+
+            //Remove .h for styles
+            if (size_t lastExtensionPos = cleanedFile.rfind('.'); lastExtensionPos != std::string::npos)
+                cleanedFile = cleanedFile.substr(0, lastExtensionPos);
+            styles.push_back(cleanedFile);
         }
     }
 }
