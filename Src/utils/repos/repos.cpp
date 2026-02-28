@@ -126,7 +126,7 @@ void repos::generateRepoCard(const nlohmann::json& repo, Tag& container, const D
     std::string starsStr = std::to_string(stars);
     std::string forksStr = std::to_string(forks);
 
-    Tag link = Tag("a").addAttr("href", repoUrl);
+    Tag link = Tag("a").addAttr("href", repoUrl).addAttr("class", "card-link");
     Tag description = p(repoDescription);
     Tag website = p("No website available");
     Tag docs = p("No docs available");
@@ -138,7 +138,8 @@ void repos::generateRepoCard(const nlohmann::json& repo, Tag& container, const D
 
     Tag article("article");
     article.addAttr("class", "project").addAttr("id", repoName)
-            .put(link.put(h2(repoName)))
+            .put(link)
+            .put(h2(repoName).addAttr("class", "title"))
             .put(description)
             .put(website)
             .put(docs)

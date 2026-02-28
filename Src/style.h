@@ -125,6 +125,19 @@ public:
 
         std::ofstream cssFile("out/styles/" + fileName + ".css");
         cssFile << output;
+
+        styleData = {};
+    }
+    static std::string BuildInline() {
+        std::string output;
+
+        BuildImports(output);
+        BuildAtRules(output);
+        BuildStyles(output, styleData.styles);
+
+        styleData = {};
+
+        return output;
     }
 };
 

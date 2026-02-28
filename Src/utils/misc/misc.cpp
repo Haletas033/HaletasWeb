@@ -3,6 +3,8 @@
 //
 
 #include "misc.h"
+
+#include "../../style.h"
 const std::string navStyles = "nav {top: 0;width: 100%; z-index: 1000; padding-left: 1em;}main.container {padding-top: 1em;}";
 const std::string skillStyles = "#skills {display: flex;flex-direction: column;justify-content: center;align-items: center;}";
 
