@@ -10,6 +10,16 @@ const std::string skillStyles = "#skills {display: flex;flex-direction: column;j
 
 const std::string misc::extraStyles = navStyles + skillStyles;
 
+const std::unordered_map<std::string, std::string> misc::languageColours = {
+    {"C++", "#f34b7d"},
+    {"C", "#555555"},
+    {"Zig", "#ec915c"},
+    {"C#", "#178600"},
+    {"Python", "#3572a5"},
+    {"Java", "#b07219"},
+    {"Kotlin", "#a97bff"}
+};
+
 std::string misc::convertToLatex(const std::string& md) {
     std::string result = md;
 

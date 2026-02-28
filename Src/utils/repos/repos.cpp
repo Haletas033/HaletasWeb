@@ -6,6 +6,7 @@
 
 #include "../../haletasWebSetup.h"
 #include "../../setup.h"
+#include "../misc/misc.h"
 
 std::vector<Dsp> repos::dsps;
 std::string repos::cpp;
@@ -134,17 +135,25 @@ void repos::generateRepoCard(const nlohmann::json& repo, Tag& container, const D
          website = Tag("a").addAttr("href", dsp.websiteIndex).put(p("Website"));
     if (dsp.docs.docsIndex != "")
          docs = Tag("a").addAttr("href", dsp.docs.docsIndex).put(p("Docs"));
-    Tag otherInfo = p(starsStr + " Stars | " + forksStr + " Forks | " + language);
+
+    //Other info boxes
+    Tag otherInfoDiv = div().addAttr("class", "otherInfo")
+        .put(div().addAttr("class", "stars").put(p("stars: " + starsStr)))
+        .put(div().addAttr("class", "forks").put(p("forks: " + forksStr)))
+        .put(div().addAttr("class", "language").put(p(language)));
+
+    auto it = misc::languageColours.find(language);
+    std::string languageColour = (it != misc::languageColours.end() ? it->second : "#8b8b8b");
 
     Tag article("article");
     article.addAttr("class", "project").addAttr("id", repoName)
+            .addAttr("style", std::string("--colour: ") + languageColour)
             .put(link)
             .put(h2(repoName).addAttr("class", "title"))
             .put(description)
             .put(website)
             .put(docs)
-            .put(otherInfo);
-
+            .put(otherInfoDiv);
     container.put(article);
 }
 
