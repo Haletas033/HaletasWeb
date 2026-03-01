@@ -138,9 +138,9 @@ void repos::generateRepoCard(const nlohmann::json& repo, Tag& container, const D
 
     //Other info boxes
     Tag otherInfoDiv = div().addAttr("class", "otherInfo")
-        .put(div().addAttr("class", "stars").put(p("stars: " + starsStr)))
-        .put(div().addAttr("class", "forks").put(p("forks: " + forksStr)))
-        .put(div().addAttr("class", "language").put(p(language)));
+        .put(div().addAttr("class", "stars").text("stars: " + starsStr))
+        .put(div().addAttr("class", "forks").text("forks: " + forksStr))
+        .put(div().addAttr("class", "language").text(language).put(div().addAttr("class", "languageCircle")));
 
     auto it = misc::languageColours.find(language);
     std::string languageColour = (it != misc::languageColours.end() ? it->second : "#8b8b8b");

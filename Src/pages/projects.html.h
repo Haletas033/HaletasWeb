@@ -47,16 +47,26 @@ inline void projects() {
         .put("display", "flex")
         .put("gap", "1em");
 
-    Style otherInfoP(".otherInfo div p"); otherInfoP
-        .put("margin", "0");
-
-    Style otherInfoDivs(".otherInfo div"); otherInfoDivs
+    Style otherInfoDivs(".otherInfo div:not(.languageCircle)"); otherInfoDivs
         .put("padding", "4px 12px")
+        .put("text-align", "center")
         .put("align-items", "center")
         .put("display","flex")
-        .put("border", "1px solid white")
+        .put("border", "2px solid white")
         .put("border-radius", "999px")
         .put("background-color", "#000000");
+
+    //Language styles
+    Style language(".language"); language
+        .put("gap", "0.5em");
+
+    //LanguageCircle styles
+    Style languageCircle(".languageCircle"); languageCircle
+        .put("width", "20px")
+        .put("height", "20px")
+        .put("border", "1px solid white")
+        .put("background-color", "var(--colour)")
+        .put("border-radius", "50%");
     const std::string repoCardStyles = Builder::BuildInline();
 
     WriteHTML("projects.html", repos::updateStyles(), header, main, "Projects", Tag("style").text(misc::extraStyles + repoCardStyles));
