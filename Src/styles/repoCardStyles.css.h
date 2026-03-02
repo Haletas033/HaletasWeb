@@ -11,11 +11,11 @@ inline void RepoCardStyles() {
     //Styles for card
     Style projectCard(".project"); projectCard
         .put("position", "relative")
+        .put("transition", "transform 0.3s, background-color 0.3s")
         .put("border-left", "4px solid var(--colour)");
 
     //Styles for hover
     Style projectCardHover(".project:hover"); projectCardHover
-        .put("transition", "transform 0.3s, background-color 0.3s")
         .put("background-color", "rgba(97, 255, 244, 0.3)")
         .put("transform", "scale(1.05)");
 
