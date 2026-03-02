@@ -163,7 +163,7 @@ void repos::updateDocs(const Dsp& dsp) {
 }
 
 Tag repos::updateStyles() {
-    Tag updatedHead = HaletasWeb::DefaultHTMLHead();
+    Tag updatedHead = HaletasWeb::DefaultHTMLHead().put(Tag("link").addAttr("rel", "stylesheet").addAttr("href", "styles/repoCards.css"));
     for (auto style : styles) {
         updatedHead
         .put(Tag("link").addAttr("rel", "stylesheet").addAttr("href", style));

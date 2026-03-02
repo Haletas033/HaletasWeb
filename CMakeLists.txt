@@ -26,6 +26,7 @@ set(BaseFiles
 
 add_executable(HaletasWeb Src/Main.cpp
         ${BaseFiles}
+        Src/styles/repoCardStyles.css.h
 )
 set_source_files_properties(${CMAKE_BINARY_DIR}/projectBuild/Src/main.cpp PROPERTIES GENERATED TRUE)
 add_executable(SubProjects EXCLUDE_FROM_ALL ${CMAKE_BINARY_DIR}/projectBuild/Src/main.cpp

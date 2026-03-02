@@ -5,6 +5,7 @@
 #include "pages/projects.html.h"
 #include "pages/documentation.html.h"
 #include "scripts/skillBallPit.js.h"
+#include "styles/repoCardStyles.css.h"
 #include "styles/style.css.h"
 
 int main() {
@@ -17,5 +18,6 @@ int main() {
     projects();
     documentation();
     Stylesheet();
+    RepoCardStyles();
     skillBallPit();
 }
