@@ -104,15 +104,16 @@ inline void skillBallPit() {
 
     Variable<> skills(CONSTANT, "skills"); skills = std::vector<std::string>{"CXX", "C", "CSHARP", "PYTHON", "HTML", "CSS", "JS"};
 
-    Variable<> ground(LET, "ground"); ground = Bodies("rectangle", 400, 610, 800, 60, JSObject("{ isStatic: true }"));
-    Variable<> wallLeft(LET, "wallLeft"); wallLeft = Bodies("rectangle", 0, 610, 60, 800, JSObject("{ isStatic: true }"));
-    Variable<> wallRight(LET, "wallRight"); wallRight = Bodies("rectangle", 800, 610, 60, 800, JSObject("{ isStatic: true }"));
+    Variable<> ground(LET, "ground"); ground = Bodies("rectangle", 400, 631, 800, 60, JSObject("{ isStatic: true }"));
+    Variable<> roof(LET, "roof"); roof = Bodies("rectangle", 400, 630-2500, 800, 60, JSObject("{ isStatic: true }"));
+    Variable<> wallLeft(LET, "wallLeft"); wallLeft = Bodies("rectangle", -31, 610, 60, 8000, JSObject("{ isStatic: true }"));
+    Variable<> wallRight(LET, "wallRight"); wallRight = Bodies("rectangle", 831, 610, 60, 8000, JSObject("{ isStatic: true }"));
 
     Variable<> stack(LET, "stack"); stack = Composites("stack", 100, 0, 10, 8, 10, 10,
         Function::ArrowCall("onStackCreateObject", std::make_tuple(JSObject("x"),
             JSObject("y")), JSObject("x"), JSObject("y"), skills, Common, Bodies));
 
-    Composite("add", world, std::vector{ground, wallLeft, wallRight, stack});
+    Composite("add", world, std::vector{ground, roof, wallLeft, wallRight, stack});
     Composite("add", world, mouseConstraint);
 
     Render("run", render);
