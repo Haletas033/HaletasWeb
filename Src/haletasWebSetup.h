@@ -24,7 +24,7 @@ public:
             std::cout << entry.path() << "\n";
         }
 
-        Setup::CopyDir("LSIMdocs/imgs", "imgs");
+        Setup::CopyDir("projectBuild/LSIMdocs/imgs", "imgs");
         Setup::CopyDir("skills", "imgs/skills");
     }
 
