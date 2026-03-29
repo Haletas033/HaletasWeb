@@ -39,6 +39,7 @@ jobs:
         run: |
           cd build
           ./HaletasWeb
+          ls -R out
 
       - name: Build SubProjects
         run: |
@@ -50,6 +51,7 @@ jobs:
         run: |
           cd build
           ./SubProjects
+          ls -R out
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
