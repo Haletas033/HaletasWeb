@@ -25,6 +25,7 @@ public:
         }
 
         Setup::CopyDir("projectBuild/LSIMdocs/imgs", "imgs");
+        Setup::CopyDir("projectBuild/imgs", "imgs");
         Setup::CopyDir("skills", "imgs/skills");
     }
 
