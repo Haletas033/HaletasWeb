@@ -28,6 +28,10 @@ inline void RepoCardStyles() {
         .put("position", "absolute")
         .put("inset", "0");
 
+    Style cardAnchors(".project a"); cardAnchors
+        .put("position", "relative")
+        .put("z-index", "1");
+
     //otherInfo styles
     Style otherInfo(".otherInfo"); otherInfo
         .put("display", "flex")
