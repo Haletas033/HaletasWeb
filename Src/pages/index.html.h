@@ -33,7 +33,7 @@ inline void index() {
         .put(p("This website was designed to host everything I need. From a portfolio, to docs, to landing pages for other projects. "
             "Everything on this website is generated from C++ including this, using a custom-built DSL for HTML, CSS, and JS. "
                 "For more information on how this works and how to use it for your own websites click ")
-                .put(Tag("a").addAttr("href", "404").text("HERE"))
+                .put(Tag("a").addAttr("href", "https://github.com/Haletas033/HaletasWeb").text("HERE"))
                 .put(Tag("span").text(".")));
 
     Tag Skills("article");
